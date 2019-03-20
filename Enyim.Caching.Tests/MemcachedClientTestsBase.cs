@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,14 +24,14 @@ namespace Enyim.Caching.Tests
 			_Client = new MemcachedClient(config);
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetUp()
 		{
 			log4net.Config.XmlConfigurator.Configure();
 			MemcachedTest.TestSetup.Run();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			MemcachedTest.TestSetup.Cleanup();
