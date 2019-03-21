@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 
 namespace Enyim.Caching
 {
 	internal class NLogWrapper : Enyim.Caching.ILog
 	{
-		private NLog.Logger log;
+		private readonly NLog.Logger log;
 
 		public NLogWrapper(NLog.Logger log)
 		{
@@ -45,7 +45,7 @@ namespace Enyim.Caching
 
 		void ILog.Debug(object message, Exception exception)
 		{
-			this.log.DebugException((message ?? String.Empty).ToString(), exception);
+			this.log.Debug(exception, message?.ToString() ?? string.Empty);
 		}
 
 		void ILog.DebugFormat(string format, object arg0)
@@ -80,7 +80,7 @@ namespace Enyim.Caching
 
 		void ILog.Info(object message, Exception exception)
 		{
-			this.log.InfoException((message ?? String.Empty).ToString(), exception);
+			this.log.Info(exception, message?.ToString() ?? string.Empty);
 		}
 
 		void ILog.InfoFormat(string format, object arg0)
@@ -115,7 +115,7 @@ namespace Enyim.Caching
 
 		void ILog.Warn(object message, Exception exception)
 		{
-			this.log.WarnException((message ?? String.Empty).ToString(), exception);
+			this.log.Warn(exception, message?.ToString() ?? string.Empty);
 		}
 
 		void ILog.WarnFormat(string format, object arg0)
@@ -150,7 +150,7 @@ namespace Enyim.Caching
 
 		void ILog.Error(object message, Exception exception)
 		{
-			this.log.ErrorException((message ?? String.Empty).ToString(), exception);
+			this.log.Error(exception, message?.ToString() ?? string.Empty);
 		}
 
 		void ILog.ErrorFormat(string format, object arg0)
@@ -185,7 +185,7 @@ namespace Enyim.Caching
 
 		void ILog.Fatal(object message, Exception exception)
 		{
-			this.log.FatalException((message ?? String.Empty).ToString(), exception);
+			this.log.Fatal(exception, message?.ToString() ?? string.Empty);
 		}
 
 		void ILog.FatalFormat(string format, object arg0)

@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 using Enyim.Caching.Memcached;
 using System.Net;
@@ -13,7 +11,7 @@ namespace MemcachedTest
 	{
 		#region exp[][]
 		// this is from spymemcached's tests
-		private static String[][] exp = new[]{
+		private static readonly String[][] exp = new[]{
 				new [] {"0", "10.0.1.1:11211"},
 				new [] {"233", "10.0.1.7:11211"},
 				new [] {"466", "10.0.1.3:11211"},

@@ -1,13 +1,7 @@
 //#define DEBUG_IO
 using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 
 namespace Enyim.Caching.Memcached
 {
@@ -17,7 +11,7 @@ namespace Enyim.Caching.Memcached
 
 		private class BasicNetworkStream : Stream
 		{
-			private Socket socket;
+			private readonly Socket socket;
 
 			public BasicNetworkStream(Socket socket)
 			{
@@ -56,9 +50,8 @@ namespace Enyim.Caching.Memcached
 
 			public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
 			{
-				SocketError errorCode;
 
-				var retval = this.socket.BeginReceive(buffer, offset, count, SocketFlags.None, out errorCode, callback, state);
+				var retval = this.socket.BeginReceive(buffer, offset, count, SocketFlags.None, out SocketError errorCode, callback, state);
 
 				if (errorCode == SocketError.Success)
 					return retval;
@@ -68,9 +61,7 @@ namespace Enyim.Caching.Memcached
 
 			public override int EndRead(IAsyncResult asyncResult)
 			{
-				SocketError errorCode;
-
-				var retval = this.socket.EndReceive(asyncResult, out errorCode);
+				var retval = this.socket.EndReceive(asyncResult, out SocketError errorCode);
 
 				// actually "0 bytes read" could mean an error as well
 				if (errorCode == SocketError.Success && retval > 0)
@@ -81,9 +72,7 @@ namespace Enyim.Caching.Memcached
 
 			public override int Read(byte[] buffer, int offset, int count)
 			{
-				SocketError errorCode;
-
-				int retval = this.socket.Receive(buffer, offset, count, SocketFlags.None, out errorCode);
+				int retval = this.socket.Receive(buffer, offset, count, SocketFlags.None, out SocketError errorCode);
 
 				// actually "0 bytes read" could mean an error as well
 				if (errorCode == SocketError.Success && retval > 0)
@@ -115,7 +104,7 @@ namespace Enyim.Caching.Memcached
 #region [ License information          ]
 /* ************************************************************
  *
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

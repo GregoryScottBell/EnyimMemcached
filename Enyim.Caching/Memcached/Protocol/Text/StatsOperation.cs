@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Extensions;
 
@@ -8,9 +7,9 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 {
 	public class StatsOperation : Operation, IStatsOperation
 	{
-		private static Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(StatsOperation));
+		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(StatsOperation));
 
-		private string type;
+		private readonly string type;
 		private Dictionary<string, string> result;
 
 		public StatsOperation(string type)

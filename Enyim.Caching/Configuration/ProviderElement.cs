@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Collections.Generic;
 using Enyim.Caching.Memcached;
 using Enyim.Reflection;
-using System.Xml.Linq;
 
 namespace Enyim.Caching.Configuration
 {
@@ -16,7 +15,7 @@ namespace Enyim.Caching.Configuration
 		where T : class
 	{
 		// TODO make this element play nice with the configuration system (allow saving, etc.)
-		private Dictionary<string, string> parameters = new Dictionary<string, string>();
+		private readonly Dictionary<string, string> parameters = new Dictionary<string, string>();
 		private IProviderFactory<T> factoryInstance;
 
 		/// <summary>
@@ -119,7 +118,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  *
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

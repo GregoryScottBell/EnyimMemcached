@@ -1,12 +1,10 @@
 using System;
-using System.Linq;
 using System.Configuration;
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using System.Collections.Generic;
 using System.Threading;
 using System.Net;
-using System.Diagnostics;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Factories;
 using Enyim.Caching.Memcached.Results.Extensions;
@@ -26,8 +24,8 @@ namespace Enyim.Caching
 		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(MemcachedClient));
 
 		private IServerPool pool;
-		private IMemcachedKeyTransformer keyTransformer;
-		private ITranscoder transcoder;
+		private readonly IMemcachedKeyTransformer keyTransformer;
+		private readonly ITranscoder transcoder;
 		private IPerformanceMonitor performanceMonitor;
 
 		public IStoreOperationResultFactory StoreOperationResultFactory { get; set; }
@@ -71,7 +69,7 @@ namespace Enyim.Caching
 			this.performanceMonitor = configuration.CreatePerformanceMonitor();
 
 			this.pool = configuration.CreatePool();
-			this.pool.NodeFailed += (n) => { var f = this.NodeFailed; if (f != null) f(n); };
+			this.pool.NodeFailed += n => this.NodeFailed?.Invoke(n);
 			this.StartPool();
 
 			StoreOperationResultFactory = new DefaultStoreOperationResultFactory();
@@ -87,21 +85,17 @@ namespace Enyim.Caching
 
 		public MemcachedClient(IServerPool pool, IMemcachedKeyTransformer keyTransformer, ITranscoder transcoder, IPerformanceMonitor performanceMonitor)
 		{
-			if (pool == null) throw new ArgumentNullException("pool");
-			if (keyTransformer == null) throw new ArgumentNullException("keyTransformer");
-			if (transcoder == null) throw new ArgumentNullException("transcoder");
-
 			this.performanceMonitor = performanceMonitor;
-			this.keyTransformer = keyTransformer;
-			this.transcoder = transcoder;
+			this.keyTransformer = keyTransformer ?? throw new ArgumentNullException("keyTransformer");
+			this.transcoder = transcoder ?? throw new ArgumentNullException("transcoder");
 
-			this.pool = pool;
+			this.pool = pool ?? throw new ArgumentNullException("pool");
 			this.StartPool();
 		}
 
 		private void StartPool()
 		{
-			this.pool.NodeFailed += (n) => { var f = this.NodeFailed; if (f != null) f(n); };
+			this.pool.NodeFailed += n => this.NodeFailed?.Invoke(n);
 			this.pool.Start();
 		}
 
@@ -123,9 +117,8 @@ namespace Enyim.Caching
 		/// <returns>The retrieved item, or <value>null</value> if the key was not found.</returns>
 		public object Get(string key)
 		{
-			object tmp;
 
-			return this.TryGet(key, out tmp) ? tmp : null;
+			return this.TryGet(key, out object tmp) ? tmp : null;
 		}
 
 		/// <summary>
@@ -135,9 +128,8 @@ namespace Enyim.Caching
 		/// <returns>The retrieved item, or <value>default(T)</value> if the key was not found.</returns>
 		public T Get<T>(string key)
 		{
-			object tmp;
 
-			return TryGet(key, out tmp) ? (T)tmp : default(T);
+			return TryGet(key, out object tmp) ? (T)tmp : default;
 		}
 
 		/// <summary>
@@ -148,9 +140,7 @@ namespace Enyim.Caching
 		/// <returns>The <value>true</value> if the item was successfully retrieved.</returns>
 		public bool TryGet(string key, out object value)
 		{
-			ulong cas = 0;
-
-			return this.PerformTryGet(key, out cas, out value).Success;
+			return this.PerformTryGet(key, out _, out value).Success;
 		}
 
 		public CasResult<object> GetWithCas(string key)
@@ -160,19 +150,16 @@ namespace Enyim.Caching
 
 		public CasResult<T> GetWithCas<T>(string key)
 		{
-			CasResult<object> tmp;
 
-			return this.TryGetWithCas(key, out tmp)
+			return this.TryGetWithCas(key, out CasResult<object> tmp)
 					? new CasResult<T> { Cas = tmp.Cas, Result = (T)tmp.Result }
-					: new CasResult<T> { Cas = tmp.Cas, Result = default(T) };
+					: new CasResult<T> { Cas = tmp.Cas, Result = default };
 		}
 
 		public bool TryGetWithCas(string key, out CasResult<object> value)
 		{
-			object tmp;
-			ulong cas;
 
-			var retval = this.PerformTryGet(key, out cas, out tmp);
+			var retval = this.PerformTryGet(key, out ulong cas, out object tmp);
 
 			value = new CasResult<object> { Cas = cas, Result = tmp };
 
@@ -232,9 +219,7 @@ namespace Enyim.Caching
 		public bool Store(StoreMode mode, string key, object value)
 		{
 			ulong tmp = 0;
-			int status;
-
-			return this.PerformStore(mode, key, value, 0, ref tmp, out status).Success;
+			return this.PerformStore(mode, key, value, 0, ref tmp, out _).Success;
 		}
 
 		/// <summary>
@@ -248,9 +233,7 @@ namespace Enyim.Caching
 		public bool Store(StoreMode mode, string key, object value, TimeSpan validFor)
 		{
 			ulong tmp = 0;
-			int status;
-
-			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(validFor), ref tmp, out status).Success;
+			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(validFor), ref tmp, out _).Success;
 		}
 
 		/// <summary>
@@ -264,9 +247,7 @@ namespace Enyim.Caching
 		public bool Store(StoreMode mode, string key, object value, DateTime expiresAt)
 		{
 			ulong tmp = 0;
-			int status;
-
-			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(expiresAt), ref tmp, out status).Success;
+			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(expiresAt), ref tmp, out _).Success;
 		}
 
 		/// <summary>
@@ -331,9 +312,8 @@ namespace Enyim.Caching
 		private IStoreOperationResult PerformStore(StoreMode mode, string key, object value, uint expires, ulong cas)
 		{
 			ulong tmp = cas;
-			int status;
 
-			var retval = this.PerformStore(mode, key, value, expires, ref tmp, out status);
+			var retval = this.PerformStore(mode, key, value, expires, ref tmp, out int status);
 			retval.StatusCode = status;
 
 			if (retval.Success)
@@ -860,8 +840,7 @@ namespace Enyim.Caching
 								// deserialize the items in the dictionary
 								foreach (var kvp in mget.Result)
 								{
-									string original;
-									if (hashed.TryGetValue(kvp.Key, out original))
+									if (hashed.TryGetValue(kvp.Key, out string original))
 									{
 										var result = collector(mget, kvp);
 
@@ -902,8 +881,7 @@ namespace Enyim.Caching
 				var node = this.pool.Locate(k);
 				if (node == null) continue;
 
-				IList<string> list;
-				if (!retval.TryGetValue(node, out list))
+				if (!retval.TryGetValue(node, out IList<string> list))
 					retval[node] = list = new List<string>(4);
 
 				list.Add(k);
@@ -1005,7 +983,7 @@ namespace Enyim.Caching
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

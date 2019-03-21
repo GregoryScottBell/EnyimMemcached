@@ -10,18 +10,15 @@ namespace Enyim
 	/// </summary>
 	public sealed class TigerHash : HashAlgorithm
 	{
-		const int PASSES = 3;
 		const int BLOCKSIZE = 64;
 
 		long totalLength;
 		ulong a;
 		ulong b;
 		ulong c;
-
-		byte[] internalDataBuffer;
+		readonly byte[] internalDataBuffer;
 		int bufferPosition;
-
-		ulong[] block = new ulong[8];
+		readonly ulong[] block = new ulong[8];
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TigerHash"/> class.
@@ -192,7 +189,7 @@ namespace Enyim
 			this.RoundBCA(tmpBlock[6], 9);
 			this.RoundCAB(tmpBlock[7], 9);
 
-			this.a = this.a ^ aa;
+			this.a ^= aa;
 			this.b -= bb;
 			this.c += cc;
 		}

@@ -11,7 +11,7 @@ namespace Enyim.Caching.Configuration
 	public sealed class AuthenticationElement : ConfigurationElement, IAuthenticationConfiguration
 	{
 		// TODO make this element play nice with the configuration system (allow saving, etc.)
-		private Dictionary<string, object> parameters = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> parameters = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Gets or sets the type of the <see cref="T:Enyim.Caching.Memcached.IAuthenticationProvider"/> which will be used authehticate the connections to the Memcached nodes.
@@ -59,7 +59,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

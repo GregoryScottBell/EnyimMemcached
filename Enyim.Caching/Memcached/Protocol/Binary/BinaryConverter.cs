@@ -19,7 +19,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 		{
 			fixed (byte* buffer = segment.Array)
 			{
-				byte* ptr = buffer + segment.Offset + offset;
+				_ = buffer + segment.Offset + offset;
 
 				return DecodeInt32(buffer, 0);
 			}

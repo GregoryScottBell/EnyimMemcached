@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 
 namespace Enyim.Caching
@@ -32,10 +32,10 @@ namespace Enyim.Caching
 
 		static LogManager()
 		{
-			var section = ConfigurationManager.GetSection("enyim.com/log") as Enyim.Caching.Configuration.LoggerSection;
+			var section = ConfigurationManager.GetSection("enyim.com/log") as Configuration.LoggerSection;
 			ILogFactory f = null;
 
-			if (section != null && section.LogFactory != null)
+			if (section?.LogFactory != null)
 			{
 				f = Enyim.Reflection.FastActivator.Create(section.LogFactory) as ILogFactory;
 			}
@@ -54,8 +54,7 @@ namespace Enyim.Caching
 		/// <param name="factory"></param>
 		public static void AssignFactory(ILogFactory factory)
 		{
-			if (factory == null) throw new ArgumentNullException("factory");
-			LogManager.factory = factory;
+			LogManager.factory = factory ?? throw new ArgumentNullException("factory");
 		}
 
 		/// <summary>

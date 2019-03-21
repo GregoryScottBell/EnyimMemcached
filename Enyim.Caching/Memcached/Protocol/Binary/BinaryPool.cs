@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
-using System.Threading;
 using Enyim.Caching.Configuration;
-using Enyim.Collections;
-using System.Security;
 
 namespace Enyim.Caching.Memcached.Protocol.Binary
 {
@@ -14,8 +9,8 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 	/// </summary>
 	public class BinaryPool : DefaultServerPool
 	{
-		ISaslAuthenticationProvider authenticationProvider;
-		IMemcachedClientConfiguration configuration;
+		readonly ISaslAuthenticationProvider authenticationProvider;
+		readonly IMemcachedClientConfiguration configuration;
 
 		public BinaryPool(IMemcachedClientConfiguration configuration)
 			: base(configuration, new BinaryOperationFactory())

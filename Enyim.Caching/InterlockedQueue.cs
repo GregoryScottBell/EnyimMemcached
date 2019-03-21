@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace Enyim.Collections
@@ -17,7 +17,7 @@ namespace Enyim.Collections
 		/// </summary>
 		public InterlockedQueue()
 		{
-			Node node = new Node(default(T));
+			Node node = new Node(default);
 
 			this.headNode = node;
 			this.tailNode = node;
@@ -48,9 +48,9 @@ namespace Enyim.Collections
 					if (Object.ReferenceEquals(head, tail))
 					{
 						// is the queue empty?
-						if (Object.ReferenceEquals(next, null))
+						if (next is null)
 						{
-							value = default(T);
+							value = default;
 
 							// queue is empty and cannot dequeue
 							return false;
@@ -99,9 +99,9 @@ namespace Enyim.Collections
 					if (Object.ReferenceEquals(head, tail))
 					{
 						// is the queue empty?
-						if (Object.ReferenceEquals(next, null))
+						if (next is null)
 						{
-							value = default(T);
+							value = default;
 
 							// queue is empty
 							return false;
@@ -140,7 +140,7 @@ namespace Enyim.Collections
 				if (Object.ReferenceEquals(tail, this.tailNode))
 				{
 					// was tail pointing to the last node?
-					if (Object.ReferenceEquals(next, null))
+					if (next is null)
 					{
 						if (Object.ReferenceEquals(
 								Interlocked.CompareExchange(ref tail.Next, valueNode, next),

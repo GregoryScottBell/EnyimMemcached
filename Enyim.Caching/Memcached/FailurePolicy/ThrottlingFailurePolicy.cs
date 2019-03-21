@@ -1,7 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Enyim.Caching.Configuration;
 
 namespace Enyim.Caching.Memcached
@@ -14,8 +12,8 @@ namespace Enyim.Caching.Memcached
 		private static readonly ILog log = LogManager.GetLogger(typeof(ThrottlingFailurePolicy));
 		private static readonly bool LogIsDebugEnabled = log.IsDebugEnabled;
 
-		private int resetAfter;
-		private int failureThreshold;
+		private readonly int resetAfter;
+		private readonly int failureThreshold;
 		private DateTime lastFailed;
 		private int failCounter;
 
@@ -110,14 +108,12 @@ namespace Enyim.Caching.Memcached
 
 		void IProvider.Initialize(Dictionary<string, string> parameters)
 		{
-			int failureThreshold;
-			ConfigurationHelper.TryGetAndRemove(parameters, "failureThreshold", out failureThreshold, true);
+			ConfigurationHelper.TryGetAndRemove(parameters, "failureThreshold", out int failureThreshold, true);
 
 			if (failureThreshold < 1) throw new InvalidOperationException("failureThreshold must be > 0");
 			this.FailureThreshold = failureThreshold;
 
-			TimeSpan reset;
-			ConfigurationHelper.TryGetAndRemove(parameters, "resetAfter", out reset, true);
+			ConfigurationHelper.TryGetAndRemove(parameters, "resetAfter", out TimeSpan reset, true);
 			if (reset <= TimeSpan.Zero) throw new InvalidOperationException("resetAfter must be > 0msec");
 
 			this.ResetAfter = (int)reset.TotalMilliseconds;

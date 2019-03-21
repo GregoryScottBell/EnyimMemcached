@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Enyim.Caching.Memcached.Results.StatusCodes;
 
@@ -41,8 +38,7 @@ namespace Enyim.Caching.Tests
 			var storeResult = Store(key: key, value: value);
 			StoreAssertPass(storeResult);
 
-			object temp;
-			var getResult = _Client.ExecuteTryGet(key, out temp);
+			var getResult = _Client.ExecuteTryGet(key, out object temp);
 			GetAssertPass(getResult, temp);
 		}
 

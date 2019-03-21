@@ -7,10 +7,10 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 {
 	public class MutatorOperation : BinarySingleItemOperation, IMutatorOperation
 	{
-		private ulong defaultValue;
-		private ulong delta;
-		private uint expires;
-		private MutationMode mode;
+		private readonly ulong defaultValue;
+		private readonly ulong delta;
+		private readonly uint expires;
+		private readonly MutationMode mode;
 		private ulong result;
 
 		public MutatorOperation(MutationMode mode, string key, ulong defaultValue, ulong delta, uint expires)

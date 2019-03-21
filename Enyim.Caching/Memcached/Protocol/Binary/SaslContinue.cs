@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Enyim.Caching.Memcached.Protocol.Binary
 {
@@ -9,7 +7,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 	/// </summary>
 	public class SaslContinue : SaslStep
 	{
-		private byte[] continuation;
+		private readonly byte[] continuation;
 
 		public SaslContinue(ISaslAuthenticationProvider provider, byte[] continuation)
 			: base(provider)

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -100,7 +98,7 @@ namespace Enyim.Caching.Tests
 		public void When_Appending_To_Existing_Value_Result_Is_Not_Successful_With_Invalid_Cas()
 		{
 			var key = GetUniqueKey("concat");
-			var value = GetRandomString();
+			_ = GetRandomString();
 
 			var storeResult = Store(key: key);
 			StoreAssertPass(storeResult);
@@ -134,7 +132,7 @@ namespace Enyim.Caching.Tests
 		public void When_Prepending_To_Existing_Value_Result_Is_Not_Successful_With_Invalid_Cas()
 		{
 			var key = GetUniqueKey("concat");
-			var value = GetRandomString();
+			_ = GetRandomString();
 
 			var storeResult = Store(key: key);
 			StoreAssertPass(storeResult);

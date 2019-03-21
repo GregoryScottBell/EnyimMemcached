@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading;
 using System.Linq.Expressions;
 
 namespace Enyim.Reflection
@@ -15,7 +10,7 @@ namespace Enyim.Reflection
 	/// </summary>
 	public static class FastActivator
 	{
-		private static Dictionary<Type, Func<object>> factoryCache = new Dictionary<Type, Func<object>>();
+		private static readonly Dictionary<Type, Func<object>> factoryCache = new Dictionary<Type, Func<object>>();
 
 		/// <summary>
 		/// Creates an instance of the specified type using a generated factory to avoid using Reflection.
@@ -34,9 +29,8 @@ namespace Enyim.Reflection
 		/// <returns>The newly created instance.</returns>
 		public static object Create(Type type)
 		{
-			Func<object> f;
 
-			if (!factoryCache.TryGetValue(type, out f))
+			if (!factoryCache.TryGetValue(type, out Func<object> f))
 				lock (factoryCache)
 					if (!factoryCache.TryGetValue(type, out f))
 					{
@@ -56,7 +50,7 @@ namespace Enyim.Reflection
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

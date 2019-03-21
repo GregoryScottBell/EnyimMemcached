@@ -1,12 +1,5 @@
 using System;
-using System.Linq;
-using System.Configuration;
-using Enyim.Caching.Configuration;
-using Enyim.Caching.Memcached;
-using System.Collections.Generic;
 using System.Threading;
-using System.Net;
-using System.Diagnostics;
 
 namespace Enyim.Caching
 {

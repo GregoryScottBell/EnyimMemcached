@@ -47,7 +47,7 @@ namespace Enyim.Caching.Memcached
 		};
 		#endregion
 
-		private Dictionary<IPEndPoint, Dictionary<string, string>> results;
+		private readonly Dictionary<IPEndPoint, Dictionary<string, string>> results;
 
 		internal ServerStats(Dictionary<IPEndPoint, Dictionary<string, string>> results)
 		{
@@ -70,9 +70,8 @@ namespace Enyim.Caching.Memcached
 				if (String.IsNullOrEmpty(tmp))
 					throw new ArgumentException("Item was not found: " + item);
 
-				long value;
 				// return the value
-				if (Int64.TryParse(tmp, out value))
+				if (Int64.TryParse(tmp, out long value))
 					return value;
 
 				throw new ArgumentException("Invalid value string was returned: " + tmp);
@@ -118,8 +117,7 @@ namespace Enyim.Caching.Memcached
 			if (String.IsNullOrEmpty(uptime))
 				throw new ArgumentException("No uptime found for the server " + server);
 
-			long value;
-			if (!Int64.TryParse(uptime, out value))
+			if (!Int64.TryParse(uptime, out long value))
 				throw new ArgumentException("Invalid uptime string was returned: " + uptime);
 
 			return TimeSpan.FromSeconds(value);
@@ -133,12 +131,9 @@ namespace Enyim.Caching.Memcached
 		/// <returns>The value of the stat item</returns>
 		public string GetRaw(IPEndPoint server, string key)
 		{
-			Dictionary<string, string> serverValues;
-			string retval;
-
-			if (this.results.TryGetValue(server, out serverValues))
+			if (this.results.TryGetValue(server, out Dictionary<string, string> serverValues))
 			{
-				if (serverValues.TryGetValue(key, out retval))
+				if (serverValues.TryGetValue(key, out string retval))
 					return retval;
 
 				if (log.IsDebugEnabled)
@@ -169,9 +164,7 @@ namespace Enyim.Caching.Memcached
 
 		public IEnumerable<KeyValuePair<IPEndPoint, string>> GetRaw(string key)
 		{
-			string tmp;
-
-			return this.results.Select(kvp => new KeyValuePair<IPEndPoint, string>(kvp.Key, kvp.Value != null &&  kvp.Value.TryGetValue(key, out tmp) ? tmp : null)).ToList();
+			return this.results.Select(kvp => new KeyValuePair<IPEndPoint, string>(kvp.Key, kvp.Value != null && kvp.Value.TryGetValue(key, out string tmp) ? tmp : null)).ToList();
 		}
 	}
 }

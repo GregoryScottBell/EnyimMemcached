@@ -1,4 +1,3 @@
-using System;
 using System.Configuration;
 
 namespace Enyim.Caching.Configuration

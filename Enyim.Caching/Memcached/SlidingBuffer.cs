@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using Enyim.Collections;
 
@@ -26,9 +25,8 @@ namespace Enyim.Caching.Memcached
 		public int Read(byte[] buffer, int offset, int count)
 		{
 			var read = 0;
-			Segment segment;
 
-			while (read < count && this.buffers.Peek(out segment))
+			while (read < count && this.buffers.Peek(out Segment segment))
 			{
 				var available = Math.Min(segment.WriteOffset - segment.ReadOffset, count - read);
 
@@ -47,7 +45,7 @@ namespace Enyim.Caching.Memcached
 					// (which is probably being written by the receiver)
 					if (this.lastSegment != segment)
 					{
-						this.buffers.Dequeue(out segment);
+						this.buffers.Dequeue(out _);
 						//Debug.Assert(success, "Could peek but could not dequeue?");
 
 						//bufferManager.ReturnBuffer(segment.Data);
@@ -112,10 +110,8 @@ namespace Enyim.Caching.Memcached
 
 		public void UnsafeClear()
 		{
-			Segment tmp;
-
 			this.lastSegment = null;
-			while (this.buffers.Dequeue(out tmp)) ;
+			while (this.buffers.Dequeue(out _)) ;
 
 			this.available = 0;
 		}

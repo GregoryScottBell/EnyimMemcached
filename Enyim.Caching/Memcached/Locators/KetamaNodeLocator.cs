@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using System.Threading;
-using System.Web;
 
 namespace Enyim.Caching.Memcached
 {
@@ -17,8 +16,8 @@ namespace Enyim.Caching.Memcached
 		private const string DefaultHashName = "System.Security.Cryptography.MD5";
 		private const int ServerAddressMutations = 160;
 		private LookupData lookupData;
-		private string hashName;
-		private Func<HashAlgorithm> factory;
+		private readonly string hashName;
+		private readonly Func<HashAlgorithm> factory;
 
 		/// <summary>
 		/// Initialized a new instance of the <see cref="KetamaNodeLocator"/> using the default hash algorithm.
@@ -112,12 +111,11 @@ namespace Enyim.Caching.Memcached
 		private uint GetKeyHash(string key)
 		{
 			var hashAlgo = this.factory();
-			var uintHash = hashAlgo as IUIntHashAlgorithm;
 
 			var keyData = Encoding.UTF8.GetBytes(key);
 
 			// shortcut for internal hash algorithms
-			if (uintHash == null)
+			if (!(hashAlgo is IUIntHashAlgorithm uintHash))
 			{
 				var data = hashAlgo.ComputeHash(keyData);
 
@@ -248,7 +246,7 @@ namespace Enyim.Caching.Memcached
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

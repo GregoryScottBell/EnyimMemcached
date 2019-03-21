@@ -1,6 +1,5 @@
 //#define DEBUG_IO
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +18,7 @@ namespace Enyim.Caching.Memcached
 
 		private bool isAlive;
 		private Socket socket;
-		private IPEndPoint endpoint;
+		private readonly IPEndPoint endpoint;
 
 		private BufferedStream inputStream;
 		private AsyncSocketHelper helper;
@@ -28,9 +27,11 @@ namespace Enyim.Caching.Memcached
 		{
 			this.isAlive = true;
 
-			var socket = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-			// TODO test if we're better off using nagle
-			socket.NoDelay = true;
+			var socket = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+			{
+				// TODO test if we're better off using nagle
+				NoDelay = true
+			};
 
 			var timeout = connectionTimeout == TimeSpan.MaxValue
 							? Timeout.Infinite
@@ -251,9 +252,7 @@ namespace Enyim.Caching.Memcached
 		{
 			this.CheckDisposed();
 
-			SocketError status;
-
-			this.socket.Send(data, offset, length, SocketFlags.None, out status);
+			this.socket.Send(data, offset, length, SocketFlags.None, out SocketError status);
 
 			if (status != SocketError.Success)
 			{
@@ -267,14 +266,13 @@ namespace Enyim.Caching.Memcached
 		{
 			this.CheckDisposed();
 
-			SocketError status;
 
 #if DEBUG
 			int total = 0;
 			for (int i = 0, C = buffers.Count; i < C; i++)
 				total += buffers[i].Count;
 
-			if (this.socket.Send(buffers, SocketFlags.None, out status) != total)
+			if (this.socket.Send(buffers, SocketFlags.None, out SocketError status) != total)
 				System.Diagnostics.Debugger.Break();
 #else
 			this.socket.Send(buffers, SocketFlags.None, out status);
@@ -315,7 +313,7 @@ namespace Enyim.Caching.Memcached
 #region [ License information          ]
 /* ************************************************************
  *
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

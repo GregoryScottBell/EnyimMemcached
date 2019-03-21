@@ -8,7 +8,7 @@ namespace DemoApp
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static void Main()
 		{
 			// create a MemcachedClient
 			// in your application you can cache the client in a static variable or just recreate it every time

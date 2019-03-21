@@ -1,9 +1,4 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using System.Security.Cryptography;
-using System.Threading;
 using Enyim.Caching.Configuration;
 
 namespace Enyim.Caching.Memcached

@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace Enyim.Caching.Memcached.Protocol.Binary
 {
 	public class BinaryRequest
 	{
-		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(BinaryRequest));
 		private static int InstanceCounter;
 
 		public byte Operation;
@@ -138,7 +136,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

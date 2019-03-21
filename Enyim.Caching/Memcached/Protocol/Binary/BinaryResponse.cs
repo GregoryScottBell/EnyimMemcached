@@ -1,13 +1,10 @@
 using System;
 using System.Text;
-using System.Diagnostics;
 
 namespace Enyim.Caching.Memcached.Protocol.Binary
 {
 	public class BinaryResponse
 	{
-		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(BinaryResponse));
-
 		private const byte MAGIC_VALUE = 0x81;
 		private const int HeaderLength = 24;
 
@@ -56,9 +53,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			var header = new byte[HeaderLength];
 			socket.Read(header, 0, header.Length);
 
-			int dataLength, extraLength;
-
-			DeserializeHeader(header, out dataLength, out extraLength);
+			DeserializeHeader(header, out int dataLength, out int extraLength);
 
 			if (dataLength > 0)
 			{
@@ -89,10 +84,11 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			this.currentSocket = socket;
 			this.next = next;
 
-			var asyncEvent = new AsyncIOArgs();
-
-			asyncEvent.Count = HeaderLength;
-			asyncEvent.Next = this.DoDecodeHeaderAsync;
+			var asyncEvent = new AsyncIOArgs
+			{
+				Count = HeaderLength,
+				Next = this.DoDecodeHeaderAsync
+			};
 
 			this.shouldCallNext = true;
 
@@ -119,9 +115,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 		private void DoDecodeHeaderAsync(AsyncIOArgs asyncEvent)
 		{
 			this.shouldCallNext = true;
-			bool tmp;
-
-			this.DoDecodeHeader(asyncEvent, out tmp);
+			this.DoDecodeHeader(asyncEvent, out _);
 		}
 
 		private bool DoDecodeHeader(AsyncIOArgs asyncEvent, out bool pendingIO)
@@ -208,7 +202,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

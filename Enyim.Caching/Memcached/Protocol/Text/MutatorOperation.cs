@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Text;
 using System.Collections.Generic;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Extensions;
@@ -9,8 +8,8 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 {
 	public class MutatorOperation : SingleItemOperation, IMutatorOperation
 	{
-		private MutationMode mode;
-		private ulong delta;
+		private readonly MutationMode mode;
+		private readonly ulong delta;
 		private ulong result;
 
 		internal MutatorOperation(MutationMode mode, string key, ulong delta)

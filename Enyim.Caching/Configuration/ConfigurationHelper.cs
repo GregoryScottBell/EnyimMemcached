@@ -9,8 +9,7 @@ namespace Enyim.Caching.Configuration
 	{
 		internal static bool TryGetAndRemove(Dictionary<string, string> dict, string name, out int value, bool required)
 		{
-			string tmp;
-			if (TryGetAndRemove(dict, name, out tmp, required)
+			if (TryGetAndRemove(dict, name, out string tmp, required)
 				&& Int32.TryParse(tmp, out value))
 			{
 				return true;
@@ -26,8 +25,7 @@ namespace Enyim.Caching.Configuration
 
 		internal static bool TryGetAndRemove(Dictionary<string, string> dict, string name, out TimeSpan value, bool required)
 		{
-			string tmp;
-			if (TryGetAndRemove(dict, name, out tmp, required)
+			if (TryGetAndRemove(dict, name, out string tmp, required)
 				&& TimeSpan.TryParse(tmp, out value))
 			{
 				return true;
@@ -80,8 +78,7 @@ namespace Enyim.Caching.Configuration
 			if (parts.Length != 2)
 				throw new ArgumentException("host:port is expected", "value");
 
-			int port;
-			if (!Int32.TryParse(parts[1], out port))
+			if (!Int32.TryParse(parts[1], out int port))
 				throw new ArgumentException("Cannot parse port: " + parts[1], "value");
 
 			return ResolveToEndPoint(parts[0], port);
@@ -92,10 +89,9 @@ namespace Enyim.Caching.Configuration
 			if (String.IsNullOrEmpty(host))
 				throw new ArgumentNullException("host");
 
-			IPAddress address;
 
 			// parse as an IP address
-			if (!IPAddress.TryParse(host, out address))
+			if (!IPAddress.TryParse(host, out IPAddress address))
 			{
 				// not an ip, resolve from dns
 				// TODO we need to find a way to specify whihc ip should be used when the host has several
@@ -114,7 +110,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

@@ -4,7 +4,7 @@ namespace Enyim.Caching
 {
 	internal class Log4NetWrapper : ILog
 	{
-		private log4net.ILog log;
+		private readonly log4net.ILog log;
 
 		public Log4NetWrapper(log4net.ILog log)
 		{

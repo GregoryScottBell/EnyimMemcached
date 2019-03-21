@@ -2,12 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Security.Cryptography;
-using System.Net;
-using System.Collections.ObjectModel;
-using System.Web;
 using Enyim.Caching.Configuration;
-using System.Configuration;
 using System.IO;
 using System.Runtime.Serialization.Json;
 
@@ -30,8 +25,7 @@ namespace Enyim.Caching.Memcached
 		{
 			ConfigurationHelper.TryGetAndRemove(parameters, "hashAlgorithm", out this.hashAlgo, true);
 
-			string json;
-			ConfigurationHelper.TryGetAndRemove(parameters, String.Empty, out json, true);
+			ConfigurationHelper.TryGetAndRemove(parameters, String.Empty, out string json, true);
 			ConfigurationHelper.CheckForUnknownAttributes(parameters);
 
 			var tmp = (int[][]) new DataContractJsonSerializer(typeof(int[][]))

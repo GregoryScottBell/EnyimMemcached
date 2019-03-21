@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
-using System.Threading;
 using Enyim.Caching.Configuration;
-using Enyim.Collections;
 using System.Security;
 
 namespace Enyim.Caching.Memcached.Protocol.Binary
@@ -15,8 +10,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 	public class BinaryNode : MemcachedNode
 	{
 		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(BinaryNode));
-
-		ISaslAuthenticationProvider authenticationProvider;
+		readonly ISaslAuthenticationProvider authenticationProvider;
 
 		public BinaryNode(IPEndPoint endpoint, ISocketPoolConfiguration config, ISaslAuthenticationProvider authenticationProvider)
 			: base(endpoint, config)

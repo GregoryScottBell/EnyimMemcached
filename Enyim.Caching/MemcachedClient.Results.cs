@@ -1,7 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Enyim.Caching.Memcached;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Extensions;
@@ -24,9 +22,7 @@ namespace Enyim.Caching
 		public IStoreOperationResult ExecuteStore(StoreMode mode, string key, object value)
 		{
 			ulong tmp = 0;
-			int status;
-
-			return this.PerformStore(mode, key, value, 0, ref tmp, out status);
+			return this.PerformStore(mode, key, value, 0, ref tmp, out _);
 		}
 
 		/// <summary>
@@ -40,9 +36,7 @@ namespace Enyim.Caching
 		public IStoreOperationResult ExecuteStore(StoreMode mode, string key, object value, TimeSpan validFor)
 		{
 			ulong tmp = 0;
-			int status;
-
-			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(validFor), ref tmp, out status);
+			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(validFor), ref tmp, out _);
 		}
 
 		/// <summary>
@@ -56,9 +50,7 @@ namespace Enyim.Caching
 		public IStoreOperationResult ExecuteStore(StoreMode mode, string key, object value, DateTime expiresAt)
 		{
 			ulong tmp = 0;
-			int status;
-
-			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(expiresAt), ref tmp, out status);
+			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(expiresAt), ref tmp, out _);
 		}			
 		
 		#endregion
@@ -128,9 +120,7 @@ namespace Enyim.Caching
 		/// <returns>The retrieved item, or <value>null</value> if the key was not found.</returns>
 		public IGetOperationResult ExecuteGet(string key)
 		{
-			object tmp;
-
-			return this.ExecuteTryGet(key, out tmp);
+			return this.ExecuteTryGet(key, out _);
 		}
 
 		/// <summary>
@@ -141,9 +131,7 @@ namespace Enyim.Caching
 		/// <returns>The <value>true</value> if the item was successfully retrieved.</returns>
 		public IGetOperationResult ExecuteTryGet(string key, out object value)
 		{
-			ulong cas = 0;
-
-			return this.PerformTryGet(key, out cas, out value);
+			return this.PerformTryGet(key, out _, out value);
 		}
 
 		/// <summary>
@@ -153,10 +141,9 @@ namespace Enyim.Caching
 		/// <returns>The retrieved item, or <value>default(T)</value> if the key was not found.</returns>
 		public IGetOperationResult<T> ExecuteGet<T>(string key)
 		{
-			object tmp;
 			var result = new DefaultGetOperationResultFactory<T>().Create();
 
-			var tryGetResult = ExecuteTryGet(key, out tmp);
+			var tryGetResult = ExecuteTryGet(key, out object tmp);
 			if (tryGetResult.Success)
 			{
 				if (tryGetResult.Value is T)
@@ -169,7 +156,7 @@ namespace Enyim.Caching
 				}
 				else
 				{
-					result.Value = default(T);
+					result.Value = default;
 					result.Fail("Type mismatch", new InvalidCastException());
 				}
 				return result;

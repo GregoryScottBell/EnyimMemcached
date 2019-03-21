@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Helpers;
 using Enyim.Caching.Memcached.Results.Extensions;
@@ -8,11 +7,9 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 {
 	public class StoreOperation : BinarySingleItemOperation, IStoreOperation
 	{
-		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(StoreOperation));
-
-		private StoreMode mode;
+		private readonly StoreMode mode;
 		private CacheItem value;
-		private uint expires;
+		private readonly uint expires;
 
 		public StoreOperation(StoreMode mode, string key, CacheItem value, uint expires) :
 			base(key)
@@ -89,7 +86,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

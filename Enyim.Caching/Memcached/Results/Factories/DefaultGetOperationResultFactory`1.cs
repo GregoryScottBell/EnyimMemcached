@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Enyim.Caching.Memcached.Results.Factories
+﻿namespace Enyim.Caching.Memcached.Results.Factories
 {
 	public class DefaultGetOperationResultFactory<T> : IGetOperationResultFactory<T>
 	{
@@ -12,7 +7,7 @@ namespace Enyim.Caching.Memcached.Results.Factories
 			return new GetOperationResult<T>()
 			{
 				Message = string.Empty,
-				Value = default(T),
+				Value = default,
 				Success = false
 			};
 		}

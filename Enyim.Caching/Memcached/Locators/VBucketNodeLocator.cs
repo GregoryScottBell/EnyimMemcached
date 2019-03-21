@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
-using System.Net;
-using System.Collections.ObjectModel;
-using System.Web;
 using Enyim.Caching.Configuration;
-using System.Configuration;
-using System.IO;
 
 namespace Enyim.Caching.Memcached
 {
@@ -17,9 +12,9 @@ namespace Enyim.Caching.Memcached
 	/// </summary>
 	public class VBucketNodeLocator : IMemcachedNodeLocator
 	{
-		private VBucket[] buckets;
-		private int mask;
-		private Func<HashAlgorithm> factory;
+		private readonly VBucket[] buckets;
+		private readonly int mask;
+		private readonly Func<HashAlgorithm> factory;
 
 		private VBucketNodeLocator()
 		{
@@ -84,10 +79,9 @@ namespace Enyim.Caching.Memcached
 			var ha = this.factory();
 
 			//little shortcut for some hashes; we skip the uint -> byte[] -> uint conversion
-			var iuha = ha as IUIntHashAlgorithm;
 			var keyBytes = Encoding.UTF8.GetBytes(key);
 
-			uint keyHash = (iuha == null)
+			uint keyHash = (!(ha is IUIntHashAlgorithm iuha))
 							? BitConverter.ToUInt32(ha.ComputeHash(keyBytes), 0)
 							: iuha.ComputeHash(keyBytes);
 

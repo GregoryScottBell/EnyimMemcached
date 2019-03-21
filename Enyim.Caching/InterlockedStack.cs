@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Enyim.Collections
 {
@@ -9,11 +8,11 @@ namespace Enyim.Collections
 	/// <typeparam name="TItem"></typeparam>
 	public class InterlockedStack<TItem>
 	{
-		private Node head;
+		private readonly Node head;
 
 		public InterlockedStack()
 		{
-			this.head = new Node(default(TItem));
+			this.head = new Node(default);
 		}
 
 		public void Push(TItem item)
@@ -26,7 +25,7 @@ namespace Enyim.Collections
 
 		public bool TryPop(out TItem value)
 		{
-			value = default(TItem);
+			value = default;
 			Node node;
 
 			do

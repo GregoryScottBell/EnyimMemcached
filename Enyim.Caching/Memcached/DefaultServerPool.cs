@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Net;
 using System.Threading;
 using Enyim.Caching.Configuration;
@@ -14,24 +13,21 @@ namespace Enyim.Caching.Memcached
 
 		private IMemcachedNode[] allNodes;
 
-		private IMemcachedClientConfiguration configuration;
-		private IOperationFactory factory;
+		private readonly IMemcachedClientConfiguration configuration;
+		private readonly IOperationFactory factory;
 		private IMemcachedNodeLocator nodeLocator;
 
-		private object DeadSync = new Object();
+		private readonly object DeadSync = new Object();
 		private System.Threading.Timer resurrectTimer;
 		private bool isTimerActive;
-		private long deadTimeoutMsec;
+		private readonly long deadTimeoutMsec;
 		private bool isDisposed;
-		private event Action<IMemcachedNode> nodeFailed;
+		private event Action<IMemcachedNode> NodeFailed;
 
 		public DefaultServerPool(IMemcachedClientConfiguration configuration, IOperationFactory opFactory)
 		{
-			if (configuration == null) throw new ArgumentNullException("socketConfig");
-			if (opFactory == null) throw new ArgumentNullException("opFactory");
-
-			this.configuration = configuration;
-			this.factory = opFactory;
+			this.configuration = configuration ?? throw new ArgumentNullException("socketConfig");
+			this.factory = opFactory ?? throw new ArgumentNullException("opFactory");
 
 			this.deadTimeoutMsec = (long)this.configuration.SocketPool.DeadTimeout.TotalMilliseconds;
 		}
@@ -47,7 +43,7 @@ namespace Enyim.Caching.Memcached
 			return new MemcachedNode(endpoint, this.configuration.SocketPool);
 		}
 
-		private void rezCallback(object state)
+		private void RezCallback(object state)
 		{
 			var isDebug = log.IsDebugEnabled;
 
@@ -151,9 +147,7 @@ namespace Enyim.Caching.Memcached
 				}
 
 				// bubble up the fail event to the client
-				var fail = this.nodeFailed;
-				if (fail != null)
-					fail(node);
+				this.NodeFailed?.Invoke(node);
 
 				// re-initialize the locator
 				var newLocator = this.configuration.CreateNodeLocator();
@@ -167,7 +161,7 @@ namespace Enyim.Caching.Memcached
 					if (isDebug) log.Debug("Starting the recovery timer.");
 
 					if (this.resurrectTimer == null)
-						this.resurrectTimer = new Timer(this.rezCallback, null, this.deadTimeoutMsec, Timeout.Infinite);
+						this.resurrectTimer = new Timer(this.RezCallback, null, this.deadTimeoutMsec, Timeout.Infinite);
 					else
 						this.resurrectTimer.Change(this.deadTimeoutMsec, Timeout.Infinite);
 
@@ -218,8 +212,8 @@ namespace Enyim.Caching.Memcached
 
 		event Action<IMemcachedNode> IServerPool.NodeFailed
 		{
-			add { this.nodeFailed += value; }
-			remove { this.nodeFailed -= value; }
+			add { this.NodeFailed += value; }
+			remove { this.NodeFailed -= value; }
 		}
 
 		#endregion
@@ -237,8 +231,7 @@ namespace Enyim.Caching.Memcached
 
 				// dispose the locator first, maybe it wants to access 
 				// the nodes one last time
-				var nd = this.nodeLocator as IDisposable;
-				if (nd != null)
+				if (this.nodeLocator is IDisposable nd)
 					try { nd.Dispose(); }
 					catch (Exception e) { if (log.IsErrorEnabled) log.Error(e); }
 
@@ -265,7 +258,7 @@ namespace Enyim.Caching.Memcached
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

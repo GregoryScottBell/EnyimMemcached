@@ -1,8 +1,6 @@
 using System;
-using System.Net;
 using System.Threading;
 using Enyim.Caching;
-using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -48,11 +46,13 @@ namespace MemcachedTest
 		[TestCase]
 		public void StoreObjectTest()
 		{
-			TestData td = new TestData();
-			td.FieldA = "Hello";
-			td.FieldB = "World";
-			td.FieldC = 19810619;
-			td.FieldD = true;
+			TestData td = new TestData
+			{
+				FieldA = "Hello",
+				FieldB = "World",
+				FieldC = 19810619,
+				FieldD = true
+			};
 
 			using (MemcachedClient client = GetClient())
 			{
@@ -63,11 +63,13 @@ namespace MemcachedTest
 		[TestCase]
 		public void GetObjectTest()
 		{
-			TestData td = new TestData();
-			td.FieldA = "Hello";
-			td.FieldB = "World";
-			td.FieldC = 19810619;
-			td.FieldD = true;
+			TestData td = new TestData
+			{
+				FieldA = "Hello",
+				FieldB = "World",
+				FieldC = 19810619,
+				FieldD = true
+			};
 
 			using (MemcachedClient client = GetClient())
 			{
@@ -115,9 +117,7 @@ namespace MemcachedTest
 			{
 				Assert.IsTrue(client.Store(StoreMode.Set, "TestNull", null), "StoreNull failed.");
 
-				object retval;
-
-				Assert.IsTrue(client.TryGet("TestNull", out retval), "Failed to retrieve TestNull");
+				Assert.IsTrue(client.TryGet("TestNull", out object retval), "Failed to retrieve TestNull");
 				Assert.IsNull(retval, "Retval should be null");
 			}
 		}
@@ -253,7 +253,7 @@ namespace MemcachedTest
 			}
 		}
 
-		private string[] keyParts = { "multi", "get", "test", "key", "parts", "test", "values" };
+		private readonly string[] keyParts = { "multi", "get", "test", "key", "parts", "test", "values" };
 
 		protected string MakeRandomKey(int partCount)
 		{

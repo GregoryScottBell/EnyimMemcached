@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Security.Cryptography;
 using System.Net;
-using System.Collections.ObjectModel;
-using System.Web;
 
 namespace Enyim.Caching.Configuration
 {
@@ -18,18 +13,15 @@ namespace Enyim.Caching.Configuration
 
 	public struct VBucket
 	{
-		private int master;
-		private int[] replicas;
-
 		public VBucket(int master, int[] replicas)
 		{
-			this.master = master;
-			this.replicas = replicas;
+			this.Master = master;
+			this.Replicas = replicas;
 		}
 
-		public int Master { get { return this.master; } }
-		public int[] Replicas { get { return this.replicas; } }
-	}
+        public int Master { get; }
+        public int[] Replicas { get; }
+    }
 }
 
 #region [ License information          ]

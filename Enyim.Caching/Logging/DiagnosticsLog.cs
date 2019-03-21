@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.IO;
 using System.Configuration;
@@ -10,7 +7,7 @@ namespace Enyim.Caching
 {
 	public class DiagnosticsLogFactory : ILogFactory
 	{
-		private TextWriter writer;
+		private readonly TextWriter writer;
 
 		public DiagnosticsLogFactory() : this(ConfigurationManager.AppSettings["Enyim.Caching.Diagnostics.LogPath"]) { }
 
@@ -58,8 +55,8 @@ namespace Enyim.Caching
 		private const string PrefixError = "ERROR";
 		private const string PrefixFatal = "FATAL";
 
-		private TextWriter writer;
-		private string name;
+		private readonly TextWriter writer;
+		private readonly string name;
 
 		public TextWriterLog(string name, TextWriter writer)
 		{

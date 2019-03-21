@@ -1,5 +1,3 @@
-using System;
-
 namespace Enyim.Caching.Memcached
 {
 	public enum MutationMode : byte { Increment = 0x05, Decrement = 0x06 };

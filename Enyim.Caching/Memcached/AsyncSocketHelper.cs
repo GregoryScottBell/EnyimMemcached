@@ -1,12 +1,6 @@
 //#define DEBUG_IO
 using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
 namespace Enyim.Caching.Memcached
@@ -20,10 +14,10 @@ namespace Enyim.Caching.Memcached
 		{
 			private const int ChunkSize = 65536;
 
-			private PooledSocket socket;
-			private SlidingBuffer asyncBuffer;
+			private readonly PooledSocket socket;
+			private readonly SlidingBuffer asyncBuffer;
 
-			private SocketAsyncEventArgs readEvent;
+			private readonly SocketAsyncEventArgs readEvent;
 #if DEBUG_IO
 			private int doingIO;
 #endif
@@ -32,7 +26,7 @@ namespace Enyim.Caching.Memcached
 			private AsyncIOArgs pendingArgs;
 
 			private int isAborted;
-			private ManualResetEvent readInProgressEvent;
+			private readonly ManualResetEvent readInProgressEvent;
 
 			public AsyncSocketHelper(PooledSocket socket)
 			{
@@ -191,7 +185,7 @@ namespace Enyim.Caching.Memcached
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

@@ -1,13 +1,10 @@
 using System;
-using System.Globalization;
-using System.Text;
-using System.Collections.Generic;
 
 namespace Enyim.Caching.Memcached.Protocol.Text
 {
 	public class ConcateOperation : StoreOperationBase, IConcatOperation
 	{
-		private ConcatenationMode mode;
+		private readonly ConcatenationMode mode;
 
 		internal ConcateOperation(ConcatenationMode mode, string key, ArraySegment<byte> data)
 			: base(mode == ConcatenationMode.Append

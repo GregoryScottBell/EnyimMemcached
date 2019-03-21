@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached.Results;
@@ -12,7 +10,7 @@ namespace Enyim.Caching.Tests
 	[TestFixture]
 	public abstract class MemcachedClientTestsBase
 	{
-		private Random random = new Random();
+		private readonly Random random = new Random();
 		protected MemcachedClient _Client;
 
 		[SetUp]

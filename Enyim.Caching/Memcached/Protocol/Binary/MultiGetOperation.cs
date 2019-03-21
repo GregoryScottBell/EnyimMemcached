@@ -1,8 +1,5 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Extensions;
 
@@ -89,13 +86,11 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 
 		private bool DoReadAsync()
 		{
-			bool ioPending;
-
 			var reader = this.asyncReader;
 
 			while (this.asyncLoopState == null)
 			{
-				var readSuccess = reader.ReadAsync(this.currentSocket, this.EndReadAsync, out ioPending);
+				var readSuccess = reader.ReadAsync(this.currentSocket, this.EndReadAsync, out bool ioPending);
 				this.StatusCode = reader.StatusCode;
 
 				if (ioPending) return readSuccess;
@@ -127,10 +122,8 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 
 		private void StoreResult(BinaryResponse reader)
 		{
-			string key;
-
 			// find the key to the response
-			if (!this.idToKey.TryGetValue(reader.CorrelationId, out key))
+			if (!this.idToKey.TryGetValue(reader.CorrelationId, out string key))
 			{
 				// we're not supposed to get here tho
 				log.WarnFormat("Found response with CorrelationId {0}, but no key is matching it.", reader.CorrelationId);
@@ -163,10 +156,8 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 				if (response.CorrelationId == this.noopId)
 					return result.Pass();
 
-				string key;
-
 				// find the key to the response
-				if (!this.idToKey.TryGetValue(response.CorrelationId, out key))
+				if (!this.idToKey.TryGetValue(response.CorrelationId, out string key))
 				{
 					// we're not supposed to get here tho
 					log.WarnFormat("Found response with CorrelationId {0}, but no key is matching it.", response.CorrelationId);
@@ -201,7 +192,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

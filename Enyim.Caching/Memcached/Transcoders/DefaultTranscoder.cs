@@ -26,18 +26,16 @@ namespace Enyim.Caching.Memcached
 		protected virtual CacheItem Serialize(object value)
 		{
 			// raw data is a special case when some1 passes in a buffer (byte[] or ArraySegment<byte>)
-			if (value is ArraySegment<byte>)
+			if (value is ArraySegment<byte> segment)
 			{
 				// ArraySegment<byte> is only passed in when a part of buffer is being 
 				// serialized, usually from a MemoryStream (To avoid duplicating arrays 
 				// the byte[] returned by MemoryStream.GetBuffer is placed into an ArraySegment.)
-				return new CacheItem(RawDataFlag, (ArraySegment<byte>)value);
+				return new CacheItem(RawDataFlag, segment);
 			}
 
-			var tmpByteArray = value as byte[];
-
 			// - or we just received a byte[]. No further processing is needed.
-			if (tmpByteArray != null)
+			if (value is byte[] tmpByteArray)
 			{
 				return new CacheItem(RawDataFlag, new ArraySegment<byte>(tmpByteArray));
 			}
@@ -322,7 +320,7 @@ namespace Enyim.Caching.Memcached
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

@@ -1,5 +1,3 @@
-using System;
-
 namespace Enyim.Caching.Memcached
 {
 	/// <summary>

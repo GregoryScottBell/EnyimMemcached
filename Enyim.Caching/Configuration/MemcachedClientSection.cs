@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Net;
 using Enyim.Caching.Memcached;
-using Enyim.Reflection;
 
 namespace Enyim.Caching.Configuration
 {

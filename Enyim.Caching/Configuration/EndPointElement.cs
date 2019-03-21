@@ -54,10 +54,7 @@ namespace Enyim.Caching.Configuration
 
 				if (String.IsNullOrEmpty(address))
 					return;
-
-				System.Net.IPAddress tmp;
-
-				if (!System.Net.IPAddress.TryParse(address, out tmp))
+				if (!System.Net.IPAddress.TryParse(address, out _))
 					throw new ConfigurationErrorsException("Invalid address specified: " + address);
 			}
 		}
@@ -68,7 +65,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

@@ -5,7 +5,7 @@ namespace Enyim.Caching.Configuration
 {
 	public class InterfaceValidator : ConfigurationValidatorBase
 	{
-		private Type interfaceType;
+		private readonly Type interfaceType;
 
 		public InterfaceValidator(Type type)
 		{
@@ -29,7 +29,7 @@ namespace Enyim.Caching.Configuration
 
 	public sealed class InterfaceValidatorAttribute : ConfigurationValidatorAttribute
 	{
-		private Type interfaceType;
+		private readonly Type interfaceType;
 
 		public InterfaceValidatorAttribute(Type type)
 		{
@@ -49,7 +49,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

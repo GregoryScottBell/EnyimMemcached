@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Enyim.Caching.Memcached;
 
 namespace Enyim.Caching.Configuration
@@ -103,10 +100,7 @@ namespace Enyim.Caching.Configuration
 			get { return this.policyFactory; }
 			set
 			{
-				if (value == null)
-					throw new ArgumentNullException("value");
-
-				this.policyFactory = value;
+				this.policyFactory = value ?? throw new ArgumentNullException("value");
 			}
 		}
 
@@ -139,7 +133,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  *
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

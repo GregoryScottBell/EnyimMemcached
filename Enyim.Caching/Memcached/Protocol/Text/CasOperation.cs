@@ -1,8 +1,3 @@
-using System;
-using System.Globalization;
-using System.Text;
-using System.Collections.Generic;
-
 namespace Enyim.Caching.Memcached.Protocol.Text
 {
 	public class CasOperation : StoreOperationBase, IStoreOperation

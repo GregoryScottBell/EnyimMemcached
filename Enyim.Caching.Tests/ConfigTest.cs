@@ -51,7 +51,7 @@ namespace MemcachedTest
 		public void TestVBucketConfig()
 		{
 			IMemcachedClientConfiguration config = ConfigurationManager.GetSection("test/vbucket") as IMemcachedClientConfiguration;
-			var loc = config.CreateNodeLocator();
+			_ = config.CreateNodeLocator();
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace MemcachedTest
 		[TestCase]
 		public void DefaultConfigurationTest()
 		{
-			using (new MemcachedClient()) ;
+			new MemcachedClient().Dispose();
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace MemcachedTest
 			mcc.SocketPool.ConnectionTimeout = new TimeSpan(0, 0, 10);
 			mcc.SocketPool.DeadTimeout = new TimeSpan(0, 0, 30);
 
-			using (new MemcachedClient(mcc)) ;
+			new MemcachedClient(mcc).Dispose();
 		}
 
 		[TestCase]
@@ -158,7 +158,7 @@ namespace MemcachedTest
 			mcc.Servers.Add(new System.Net.IPEndPoint(IPAddress.Loopback, 20000));
 			mcc.Servers.Add(new System.Net.IPEndPoint(IPAddress.Loopback, 20002));
 
-			using (new MemcachedClient(mcc)) ;
+			new MemcachedClient(mcc).Dispose();
 		}
 
 		[TestCase]
