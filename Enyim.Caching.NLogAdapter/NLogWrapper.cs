@@ -13,30 +13,15 @@ namespace Enyim.Caching
 
 		#region [ ILog                         ]
 
-		bool ILog.IsDebugEnabled
-		{
-			get { return this.log.IsDebugEnabled; }
-		}
+		bool ILog.IsDebugEnabled => this.log.IsDebugEnabled;
 
-		bool ILog.IsInfoEnabled
-		{
-			get { return this.log.IsDebugEnabled; }
-		}
+		bool ILog.IsInfoEnabled => this.log.IsDebugEnabled;
 
-		bool ILog.IsWarnEnabled
-		{
-			get { return this.log.IsWarnEnabled; }
-		}
+		bool ILog.IsWarnEnabled => this.log.IsWarnEnabled;
 
-		bool ILog.IsErrorEnabled
-		{
-			get { return this.log.IsErrorEnabled; }
-		}
+		bool ILog.IsErrorEnabled => this.log.IsErrorEnabled;
 
-		bool ILog.IsFatalEnabled
-		{
-			get { return this.log.IsFatalEnabled; }
-		}
+		bool ILog.IsFatalEnabled => this.log.IsFatalEnabled;
 
 		void ILog.Debug(object message)
 		{

@@ -19,10 +19,7 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 			this.mode = mode;
 		}
 
-		public ulong Result
-		{
-			get { return this.result; }
-		}
+		public ulong Result => this.result;
 
 		protected internal override IList<ArraySegment<byte>> GetBuffer()
 		{
@@ -49,15 +46,9 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 			return result;
 		}
 
-		MutationMode IMutatorOperation.Mode
-		{
-			get { return this.mode; }
-		}
+		MutationMode IMutatorOperation.Mode => this.mode;
 
-		ulong IMutatorOperation.Result
-		{
-			get { return this.result; }
-		}
+		ulong IMutatorOperation.Result => this.result;
 
 		protected internal override bool ReadResponseAsync(PooledSocket socket, System.Action<bool> next)
 		{

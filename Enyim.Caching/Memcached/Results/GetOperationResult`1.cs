@@ -2,7 +2,7 @@
 {
 	public class GetOperationResult<T> : OperationResultBase, IGetOperationResult<T>
 	{
-		public bool HasValue { get { return Value != null; } }
+		public bool HasValue => Value != null;
 
 		public T Value { get; set; }
 

@@ -73,15 +73,9 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			return result.Fail(message);
 		}
 
-		MutationMode IMutatorOperation.Mode
-		{
-			get { return this.mode; }
-		}
+		MutationMode IMutatorOperation.Mode => this.mode;
 
-		ulong IMutatorOperation.Result
-		{
-			get { return this.result; }
-		}
+		ulong IMutatorOperation.Result => this.result;
 	}
 }
 

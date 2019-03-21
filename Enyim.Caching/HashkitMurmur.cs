@@ -14,10 +14,7 @@ namespace Enyim
 			this.HashSizeValue = 32;
 		}
 
-		public override bool CanTransformMultipleBlocks
-		{
-			get { return false; }
-		}
+		public override bool CanTransformMultipleBlocks => false;
 
 		public override void Initialize() { }
 

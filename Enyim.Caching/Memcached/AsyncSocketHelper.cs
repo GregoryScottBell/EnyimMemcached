@@ -111,7 +111,7 @@ namespace Enyim.Caching.Memcached
 			private void AbortReadAndTryPublishError(bool markAsDead)
 			{
 				if (markAsDead)
-					this.socket.isAlive = false;
+					this.socket.IsAlive = false;
 
 				// we've been already aborted, so quit
 				// both the EndReceive and the wait on the event can abort the read

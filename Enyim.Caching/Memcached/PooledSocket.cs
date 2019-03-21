@@ -15,8 +15,6 @@ namespace Enyim.Caching.Memcached
 	public partial class PooledSocket : IDisposable
 	{
 		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(PooledSocket));
-
-		private bool isAlive;
 		private Socket socket;
 		private readonly IPEndPoint endpoint;
 
@@ -25,7 +23,7 @@ namespace Enyim.Caching.Memcached
 
 		public PooledSocket(IPEndPoint endpoint, TimeSpan connectionTimeout, TimeSpan receiveTimeout, TimeSpan keepAliveStartDelay, TimeSpan keepAliveInterval)
 		{
-			this.isAlive = true;
+			this.IsAlive = true;
 
 			var socket = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
 			{
@@ -85,10 +83,7 @@ namespace Enyim.Caching.Memcached
 
 		public Action<PooledSocket> CleanupCallback { get; set; }
 
-		public int Available
-		{
-			get { return this.socket.Available; }
-		}
+		public int Available => this.socket.Available;
 
 		public void Reset()
 		{
@@ -121,16 +116,13 @@ namespace Enyim.Caching.Memcached
 		/// </summary>
 		public readonly Guid InstanceId = Guid.NewGuid();
 
-		public bool IsAlive
-		{
-			get { return this.isAlive; }
-		}
+        public bool IsAlive { get; private set; }
 
-		/// <summary>
-		/// Releases all resources used by this instance and shuts down the inner <see cref="T:Socket"/>. This instance will not be usable anymore.
-		/// </summary>
-		/// <remarks>Use the IDisposable.Dispose method if you want to release this instance back into the pool.</remarks>
-		public void Destroy()
+        /// <summary>
+        /// Releases all resources used by this instance and shuts down the inner <see cref="T:Socket"/>. This instance will not be usable anymore.
+        /// </summary>
+        /// <remarks>Use the IDisposable.Dispose method if you want to release this instance back into the pool.</remarks>
+        public void Destroy()
 		{
 			this.Dispose(true);
 		}
@@ -208,7 +200,7 @@ namespace Enyim.Caching.Memcached
 			}
 			catch (IOException)
 			{
-				this.isAlive = false;
+				this.IsAlive = false;
 
 				throw;
 			}
@@ -242,7 +234,7 @@ namespace Enyim.Caching.Memcached
 				}
 				catch (IOException)
 				{
-					this.isAlive = false;
+					this.IsAlive = false;
 					throw;
 				}
 			}
@@ -256,7 +248,7 @@ namespace Enyim.Caching.Memcached
 
 			if (status != SocketError.Success)
 			{
-				this.isAlive = false;
+				this.IsAlive = false;
 
 				ThrowHelper.ThrowSocketWriteError(this.endpoint, status);
 			}
@@ -280,7 +272,7 @@ namespace Enyim.Caching.Memcached
 
 			if (status != SocketError.Success)
 			{
-				this.isAlive = false;
+				this.IsAlive = false;
 
 				ThrowHelper.ThrowSocketWriteError(this.endpoint, status);
 			}

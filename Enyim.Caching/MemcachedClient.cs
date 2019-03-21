@@ -22,11 +22,7 @@ namespace Enyim.Caching
 		public static readonly TimeSpan Infinite = TimeSpan.Zero;
 		internal static readonly MemcachedClientSection DefaultSettings = ConfigurationManager.GetSection("enyim.com/memcached") as MemcachedClientSection;
 		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(MemcachedClient));
-
-		private IServerPool pool;
-		private readonly IMemcachedKeyTransformer keyTransformer;
 		private readonly ITranscoder transcoder;
-		private IPerformanceMonitor performanceMonitor;
 
 		public IStoreOperationResultFactory StoreOperationResultFactory { get; set; }
 		public IGetOperationResultFactory GetOperationResultFactory { get; set; }
@@ -41,17 +37,17 @@ namespace Enyim.Caching
 			: this(DefaultSettings)
 		{ }
 
-		protected IServerPool Pool { get { return this.pool; } }
-		protected IMemcachedKeyTransformer KeyTransformer { get { return this.keyTransformer; } }
-		protected ITranscoder Transcoder { get { return this.transcoder; } }
-		protected IPerformanceMonitor PerformanceMonitor { get { return this.performanceMonitor; } }
+        protected IServerPool Pool { get; private set; }
+        protected IMemcachedKeyTransformer KeyTransformer { get; }
+		protected ITranscoder Transcoder => this.transcoder;
+		protected IPerformanceMonitor PerformanceMonitor { get; private set; }
 
-		/// <summary>
-		/// Initializes a new MemcachedClient instance using the specified configuration section. 
-		/// This overload allows to create multiple MemcachedClients with different pool configurations.
-		/// </summary>
-		/// <param name="sectionName">The name of the configuration section to be used for configuring the behavior of the client.</param>
-		public MemcachedClient(string sectionName)
+        /// <summary>
+        /// Initializes a new MemcachedClient instance using the specified configuration section. 
+        /// This overload allows to create multiple MemcachedClients with different pool configurations.
+        /// </summary>
+        /// <param name="sectionName">The name of the configuration section to be used for configuring the behavior of the client.</param>
+        public MemcachedClient(string sectionName)
 			: this(GetSection(sectionName))
 		{ }
 
@@ -64,12 +60,12 @@ namespace Enyim.Caching
 			if (configuration == null)
 				throw new ArgumentNullException("configuration");
 
-			this.keyTransformer = configuration.CreateKeyTransformer() ?? new DefaultKeyTransformer();
+			this.KeyTransformer = configuration.CreateKeyTransformer() ?? new DefaultKeyTransformer();
 			this.transcoder = configuration.CreateTranscoder() ?? new DefaultTranscoder();
-			this.performanceMonitor = configuration.CreatePerformanceMonitor();
+			this.PerformanceMonitor = configuration.CreatePerformanceMonitor();
 
-			this.pool = configuration.CreatePool();
-			this.pool.NodeFailed += n => this.NodeFailed?.Invoke(n);
+			this.Pool = configuration.CreatePool();
+			this.Pool.NodeFailed += n => this.NodeFailed?.Invoke(n);
 			this.StartPool();
 
 			StoreOperationResultFactory = new DefaultStoreOperationResultFactory();
@@ -85,18 +81,18 @@ namespace Enyim.Caching
 
 		public MemcachedClient(IServerPool pool, IMemcachedKeyTransformer keyTransformer, ITranscoder transcoder, IPerformanceMonitor performanceMonitor)
 		{
-			this.performanceMonitor = performanceMonitor;
-			this.keyTransformer = keyTransformer ?? throw new ArgumentNullException("keyTransformer");
+			this.PerformanceMonitor = performanceMonitor;
+			this.KeyTransformer = keyTransformer ?? throw new ArgumentNullException("keyTransformer");
 			this.transcoder = transcoder ?? throw new ArgumentNullException("transcoder");
 
-			this.pool = pool ?? throw new ArgumentNullException("pool");
+			this.Pool = pool ?? throw new ArgumentNullException("pool");
 			this.StartPool();
 		}
 
 		private void StartPool()
 		{
-			this.pool.NodeFailed += n => this.NodeFailed?.Invoke(n);
-			this.pool.Start();
+			this.Pool.NodeFailed += n => this.NodeFailed?.Invoke(n);
+			this.Pool.Start();
 		}
 
 		public event Action<IMemcachedNode> NodeFailed;
@@ -168,8 +164,8 @@ namespace Enyim.Caching
 
 		protected virtual IGetOperationResult PerformTryGet(string key, out ulong cas, out object value)
 		{
-			var hashedKey = this.keyTransformer.Transform(key);
-			var node = this.pool.Locate(hashedKey);
+			var hashedKey = this.KeyTransformer.Transform(key);
+			var node = this.Pool.Locate(hashedKey);
 			var result = GetOperationResultFactory.Create();
 
 			cas = 0;
@@ -177,7 +173,7 @@ namespace Enyim.Caching
 
 			if (node != null)
 			{
-				var command = this.pool.OperationFactory.Get(hashedKey);
+				var command = this.Pool.OperationFactory.Get(hashedKey);
 				var commandResult = node.Execute(command);
 
 				if (commandResult.Success)
@@ -185,7 +181,7 @@ namespace Enyim.Caching
 					result.Value = value = this.transcoder.Deserialize(command.Result);
 					result.Cas = cas = command.CasValue;
 
-					if (this.performanceMonitor != null) this.performanceMonitor.Get(1, true);
+					if (this.PerformanceMonitor != null) this.PerformanceMonitor.Get(1, true);
 
 					result.Pass();
 					return result;
@@ -200,7 +196,7 @@ namespace Enyim.Caching
 			result.Value = value;
 			result.Cas = cas;
 
-			if (this.performanceMonitor != null) this.performanceMonitor.Get(1, false);
+			if (this.PerformanceMonitor != null) this.PerformanceMonitor.Get(1, false);
 
 			result.Fail("Unable to locate node");
 			return result;
@@ -325,8 +321,8 @@ namespace Enyim.Caching
 
 		protected virtual IStoreOperationResult PerformStore(StoreMode mode, string key, object value, uint expires, ref ulong cas, out int statusCode)
 		{
-			var hashedKey = this.keyTransformer.Transform(key);
-			var node = this.pool.Locate(hashedKey);
+			var hashedKey = this.KeyTransformer.Transform(key);
+			var node = this.Pool.Locate(hashedKey);
 			var result = StoreOperationResultFactory.Create();
 
 			statusCode = -1;
@@ -340,13 +336,13 @@ namespace Enyim.Caching
 				{
 					log.Error(e);
 
-					if (this.performanceMonitor != null) this.performanceMonitor.Store(mode, 1, false);
+					if (this.PerformanceMonitor != null) this.PerformanceMonitor.Store(mode, 1, false);
 
 					result.Fail("PerformStore failed", e);
 					return result;
 				}
 
-				var command = this.pool.OperationFactory.Store(mode, hashedKey, item, expires, cas);
+				var command = this.Pool.OperationFactory.Store(mode, hashedKey, item, expires, cas);
 				var commandResult = node.Execute(command);
 
 				result.Cas = cas = command.CasValue;
@@ -354,7 +350,7 @@ namespace Enyim.Caching
 
 				if (commandResult.Success)
 				{
-					if (this.performanceMonitor != null) this.performanceMonitor.Store(mode, 1, true);
+					if (this.PerformanceMonitor != null) this.PerformanceMonitor.Store(mode, 1, true);
 					result.Pass();
 					return result;
 				}
@@ -363,7 +359,7 @@ namespace Enyim.Caching
 				return result;
 			}
 
-			if (this.performanceMonitor != null) this.performanceMonitor.Store(mode, 1, false);
+			if (this.PerformanceMonitor != null) this.PerformanceMonitor.Store(mode, 1, false);
 
 			result.Fail("Unable to locate node");
 			return result;
@@ -571,13 +567,13 @@ namespace Enyim.Caching
 
 		protected virtual IMutateOperationResult PerformMutate(MutationMode mode, string key, ulong defaultValue, ulong delta, uint expires, ref ulong cas)
 		{
-			var hashedKey = this.keyTransformer.Transform(key);
-			var node = this.pool.Locate(hashedKey);
+			var hashedKey = this.KeyTransformer.Transform(key);
+			var node = this.Pool.Locate(hashedKey);
 			var result = MutateOperationResultFactory.Create();
 
 			if (node != null)
 			{
-				var command = this.pool.OperationFactory.Mutate(mode, hashedKey, defaultValue, delta, expires, cas);
+				var command = this.Pool.OperationFactory.Mutate(mode, hashedKey, defaultValue, delta, expires, cas);
 				var commandResult = node.Execute(command);
 
 				result.Cas = cas = command.CasValue;
@@ -585,21 +581,21 @@ namespace Enyim.Caching
 
 				if (commandResult.Success)
 				{
-					if (this.performanceMonitor != null) this.performanceMonitor.Mutate(mode, 1, commandResult.Success);
+					if (this.PerformanceMonitor != null) this.PerformanceMonitor.Mutate(mode, 1, commandResult.Success);
 					result.Value = command.Result;
 					result.Pass();
 					return result;
 				}
 				else
 				{
-					if (this.performanceMonitor != null) this.performanceMonitor.Mutate(mode, 1, false);
+					if (this.PerformanceMonitor != null) this.PerformanceMonitor.Mutate(mode, 1, false);
 					result.InnerResult = commandResult;
 					result.Fail("Mutate operation failed, see InnerResult or StatusCode for more details");
 				}
 
 			}
 
-			if (this.performanceMonitor != null) this.performanceMonitor.Mutate(mode, 1, false);
+			if (this.PerformanceMonitor != null) this.PerformanceMonitor.Mutate(mode, 1, false);
 
 			// TODO not sure about the return value when the command fails
 			result.Fail("Unable to locate node");
@@ -666,20 +662,20 @@ namespace Enyim.Caching
 
 		protected virtual IConcatOperationResult PerformConcatenate(ConcatenationMode mode, string key, ref ulong cas, ArraySegment<byte> data)
 		{
-			var hashedKey = this.keyTransformer.Transform(key);
-			var node = this.pool.Locate(hashedKey);
+			var hashedKey = this.KeyTransformer.Transform(key);
+			var node = this.Pool.Locate(hashedKey);
 			var result = ConcatOperationResultFactory.Create();
 
 			if (node != null)
 			{
-				var command = this.pool.OperationFactory.Concat(mode, hashedKey, cas, data);
+				var command = this.Pool.OperationFactory.Concat(mode, hashedKey, cas, data);
 				var commandResult = node.Execute(command);
 
 				if (commandResult.Success)
 				{
 					result.Cas = cas = command.CasValue;
 					result.StatusCode = command.StatusCode;
-					if (this.performanceMonitor != null) this.performanceMonitor.Concatenate(mode, 1, true);
+					if (this.PerformanceMonitor != null) this.PerformanceMonitor.Concatenate(mode, 1, true);
 					result.Pass();
 				}
 				else
@@ -691,7 +687,7 @@ namespace Enyim.Caching
 				return result;
 			}
 
-			if (this.performanceMonitor != null) this.performanceMonitor.Concatenate(mode, 1, false);
+			if (this.PerformanceMonitor != null) this.PerformanceMonitor.Concatenate(mode, 1, false);
 
 			result.Fail("Unable to locate node");
 			return result;
@@ -704,9 +700,9 @@ namespace Enyim.Caching
 		/// </summary>
 		public void FlushAll()
 		{
-			foreach (var node in this.pool.GetWorkingNodes())
+			foreach (var node in this.Pool.GetWorkingNodes())
 			{
-				var command = this.pool.OperationFactory.Flush();
+				var command = this.Pool.OperationFactory.Flush();
 
 				node.Execute(command);
 			}
@@ -726,9 +722,9 @@ namespace Enyim.Caching
 			var results = new Dictionary<IPEndPoint, Dictionary<string, string>>();
 			var handles = new List<WaitHandle>();
 
-			foreach (var node in this.pool.GetWorkingNodes())
+			foreach (var node in this.Pool.GetWorkingNodes())
 			{
-				var cmd = this.pool.OperationFactory.Stats(type);
+				var cmd = this.Pool.OperationFactory.Stats(type);
 				var action = new Func<IOperation, IOperationResult>(node.Execute);
 				var mre = new ManualResetEvent(false);
 
@@ -790,7 +786,7 @@ namespace Enyim.Caching
 			// transform the keys and index them by hashed => original
 			// the mget results will be mapped using this index
 			var hashed = new Dictionary<string, string>();
-			foreach (var key in keys) hashed[this.keyTransformer.Transform(key)] = key;
+			foreach (var key in keys) hashed[this.KeyTransformer.Transform(key)] = key;
 
 			var byServer = GroupByServer(hashed.Keys);
 
@@ -803,7 +799,7 @@ namespace Enyim.Caching
 				var node = slice.Key;
 
 				var nodeKeys = slice.Value;
-				var mget = this.pool.OperationFactory.MultiGet(nodeKeys);
+				var mget = this.Pool.OperationFactory.MultiGet(nodeKeys);
 
 				// we'll use the delegate's BeginInvoke/EndInvoke to run the gets parallel
 				var action = new Func<IOperation, IOperationResult>(node.Execute);
@@ -819,7 +815,7 @@ namespace Enyim.Caching
 							if (action.EndInvoke(iar).Success)
 							{
 								#region perfmon
-								if (this.performanceMonitor != null)
+								if (this.PerformanceMonitor != null)
 								{
 									// full list of keys sent to the server
 									var expectedKeys = (string[])iar.AsyncState;
@@ -829,11 +825,11 @@ namespace Enyim.Caching
 									var resultCount = mget.Result.Count;
 
 									// log the results
-									this.performanceMonitor.Get(resultCount, true);
+									this.PerformanceMonitor.Get(resultCount, true);
 
 									// log the missing keys
 									if (resultCount != expectedCount)
-										this.performanceMonitor.Get(expectedCount - resultCount, true);
+										this.PerformanceMonitor.Get(expectedCount - resultCount, true);
 								}
 								#endregion
 
@@ -878,7 +874,7 @@ namespace Enyim.Caching
 
 			foreach (var k in keys)
 			{
-				var node = this.pool.Locate(k);
+				var node = this.Pool.Locate(k);
 				if (node == null) continue;
 
 				if (!retval.TryGetValue(node, out IList<string> list))
@@ -963,16 +959,16 @@ namespace Enyim.Caching
 		{
 			GC.SuppressFinalize(this);
 
-			if (this.pool != null)
+			if (this.Pool != null)
 			{
-				try { this.pool.Dispose(); }
-				finally { this.pool = null; }
+				try { this.Pool.Dispose(); }
+				finally { this.Pool = null; }
 			}
 
-			if (this.performanceMonitor != null)
+			if (this.PerformanceMonitor != null)
 			{
-				try { this.performanceMonitor.Dispose(); }
-				finally { this.performanceMonitor = null; }
+				try { this.PerformanceMonitor.Dispose(); }
+				finally { this.PerformanceMonitor = null; }
 			}
 		}
 

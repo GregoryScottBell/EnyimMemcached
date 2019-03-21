@@ -17,8 +17,8 @@ namespace Enyim.Caching.Memcached.Protocol
 		// Output
 		public Dictionary<string, ulong> Cas { get; protected set; }
 
-		IList<string> IMultiItemOperation.Keys { get { return this.Keys; } }
-		Dictionary<string, ulong> IMultiItemOperation.Cas { get { return this.Cas; } }
+		IList<string> IMultiItemOperation.Keys => this.Keys;
+		Dictionary<string, ulong> IMultiItemOperation.Cas => this.Cas;
 	}
 
 }

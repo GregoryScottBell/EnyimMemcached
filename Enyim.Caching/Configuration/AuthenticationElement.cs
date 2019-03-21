@@ -46,11 +46,7 @@ namespace Enyim.Caching.Configuration
 			}
 		}
 
-		System.Collections.Generic.Dictionary<string, object> IAuthenticationConfiguration.Parameters
-		{
-			// HACK we should return a clone, but i'm lazy now
-			get { return this.parameters; }
-		}
+		System.Collections.Generic.Dictionary<string, object> IAuthenticationConfiguration.Parameters => this.parameters;
 
 		#endregion
 	}

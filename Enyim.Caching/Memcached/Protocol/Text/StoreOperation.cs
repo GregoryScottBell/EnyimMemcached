@@ -10,10 +10,7 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 			this.mode = mode;
 		}
 
-		StoreMode IStoreOperation.Mode
-		{
-			get { return this.mode; }
-		}
+		StoreMode IStoreOperation.Mode => this.mode;
 	}
 }
 

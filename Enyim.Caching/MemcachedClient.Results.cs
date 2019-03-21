@@ -175,7 +175,7 @@ namespace Enyim.Caching
 			return PerformMultiGet<IGetOperationResult>(keys, (mget, kvp) =>
 			{
 				var result = GetOperationResultFactory.Create();
-				result.Value = this.transcoder.Deserialize(kvp.Value);
+				result.Value = this.Transcoder.Deserialize(kvp.Value);
 				result.Cas = mget.Cas[kvp.Key];
 				result.Success = true;
 				return result;
@@ -430,13 +430,13 @@ namespace Enyim.Caching
 		/// <returns>true if the item was successfully removed from the cache; false otherwise.</returns>
 		public IRemoveOperationResult ExecuteRemove(string key)
 		{
-			var hashedKey = this.keyTransformer.Transform(key);
-			var node = this.pool.Locate(hashedKey);
+			var hashedKey = this.KeyTransformer.Transform(key);
+			var node = this.Pool.Locate(hashedKey);
 			var result = RemoveOperationResultFactory.Create();
 
 			if (node != null)
 			{
-				var command = this.pool.OperationFactory.Delete(hashedKey, 0);
+				var command = this.Pool.OperationFactory.Delete(hashedKey, 0);
 				var commandResult = node.Execute(command);
 
 				if (commandResult.Success)

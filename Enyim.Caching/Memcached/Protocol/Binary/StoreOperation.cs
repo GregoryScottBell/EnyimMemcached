@@ -71,10 +71,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			}
 		}
 
-		StoreMode IStoreOperation.Mode
-		{
-			get { return this.mode; }
-		}
+		StoreMode IStoreOperation.Mode => this.mode;
 
 		protected internal override bool ReadResponseAsync(PooledSocket socket, System.Action<bool> next)
 		{

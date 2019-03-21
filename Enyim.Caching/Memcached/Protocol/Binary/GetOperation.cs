@@ -53,10 +53,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			return result.Fail(message);
 		}
 
-		CacheItem IGetOperation.Result
-		{
-			get { return this.result; }
-		}
+		CacheItem IGetOperation.Result => this.result;
 	}
 }
 

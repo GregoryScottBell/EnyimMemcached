@@ -21,15 +21,13 @@ namespace Enyim.Caching.Memcached
 		private static readonly object SyncRoot = new Object();
 
 		private bool isDisposed;
-
-		private readonly IPEndPoint endPoint;
 		private readonly ISocketPoolConfiguration config;
 		private InternalPoolImpl internalPoolImpl;
 		private bool isInitialized;
 
 		public MemcachedNode(IPEndPoint endpoint, ISocketPoolConfiguration socketPoolConfig)
 		{
-			this.endPoint = endpoint;
+			this.EndPoint = endpoint;
 			this.config = socketPoolConfig;
 
 			if (socketPoolConfig.ConnectionTimeout.TotalMilliseconds >= Int32.MaxValue)
@@ -41,28 +39,19 @@ namespace Enyim.Caching.Memcached
 		public event Action<IMemcachedNode> Failed;
 		private INodeFailurePolicy failurePolicy;
 
-		protected INodeFailurePolicy FailurePolicy
-		{
-			get { return this.failurePolicy ?? (this.failurePolicy = this.config.FailurePolicyFactory.Create(this)); }
-		}
+		protected INodeFailurePolicy FailurePolicy => this.failurePolicy ?? (this.failurePolicy = this.config.FailurePolicyFactory.Create(this));
 
 		/// <summary>
 		/// Gets the <see cref="T:IPEndPoint"/> of this instance
 		/// </summary>
-		public IPEndPoint EndPoint
-		{
-			get { return this.endPoint; }
-		}
+		public IPEndPoint EndPoint { get; }
 
 		/// <summary>
 		/// <para>Gets a value indicating whether the server is working or not. Returns a <b>cached</b> state.</para>
 		/// <para>To get real-time information and update the cached state, use the <see cref="M:Ping"/> method.</para>
 		/// </summary>
 		/// <remarks>Used by the <see cref="T:ServerPool"/> to quickly check if the server's state is valid.</remarks>
-		public bool IsAlive
-		{
-			get { return this.internalPoolImpl.IsAlive; }
-		}
+		public bool IsAlive => this.internalPoolImpl.IsAlive;
 
 		/// <summary>
 		/// Gets a value indicating whether the server is working or not.
@@ -249,12 +238,9 @@ namespace Enyim.Caching.Memcached
 
             public bool IsAlive { get; private set; }
 
-            public DateTime MarkedAsDeadUtc
-			{
-				get { return this.MarkedAsDeadUtc1; }
-			}
+			public DateTime MarkedAsDeadUtc => this.MarkedAsDeadUtc1;
 
-            public DateTime MarkedAsDeadUtc1 { get; set; }
+			public DateTime MarkedAsDeadUtc1 { get; set; }
 
             /// <summary>
             /// Acquires a new item from the pool
@@ -482,7 +468,7 @@ namespace Enyim.Caching.Memcached
 
 		protected internal virtual PooledSocket CreateSocket()
 		{
-			return new PooledSocket(this.endPoint, this.config.ConnectionTimeout, this.config.ReceiveTimeout, this.config.KeepAliveStartDelay, this.config.KeepAliveInterval);
+			return new PooledSocket(this.EndPoint, this.config.ConnectionTimeout, this.config.ReceiveTimeout, this.config.KeepAliveStartDelay, this.config.KeepAliveInterval);
 		}
 
 		//protected internal virtual PooledSocket CreateSocket(IPEndPoint endpoint, TimeSpan connectionTimeout, TimeSpan receiveTimeout)
@@ -566,15 +552,9 @@ namespace Enyim.Caching.Memcached
 
 		#region [ IMemcachedNode               ]
 
-		IPEndPoint IMemcachedNode.EndPoint
-		{
-			get { return this.EndPoint; }
-		}
+		IPEndPoint IMemcachedNode.EndPoint => this.EndPoint;
 
-		bool IMemcachedNode.IsAlive
-		{
-			get { return this.IsAlive; }
-		}
+		bool IMemcachedNode.IsAlive => this.IsAlive;
 
 		bool IMemcachedNode.Ping()
 		{

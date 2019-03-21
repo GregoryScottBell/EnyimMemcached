@@ -17,7 +17,7 @@ namespace Enyim.Caching.Configuration
 		protected readonly Dictionary<string, string> Parameters = new Dictionary<string, string>();
 		private TFactory instance;
 
-		protected virtual bool IsOptional { get { return false; } }
+		protected virtual bool IsOptional => false;
 
 		/// <summary>
 		/// Gets or sets the type of the factory.
@@ -68,10 +68,7 @@ namespace Enyim.Caching.Configuration
 	public class OptionalFactoryElement<TResult> : FactoryElement<TResult>
 		where TResult : class, IProvider
 	{
-		protected override bool IsOptional
-		{
-			get { return true; }
-		}
+		protected override bool IsOptional => true;
 	}
 
 }

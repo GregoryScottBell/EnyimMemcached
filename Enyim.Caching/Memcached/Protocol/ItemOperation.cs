@@ -17,15 +17,9 @@ namespace Enyim.Caching.Memcached.Protocol
 		/// <summary>
 		/// The item key of the current operation.
 		/// </summary>
-		string ISingleItemOperation.Key
-		{
-			get { return this.Key; }
-		}
+		string ISingleItemOperation.Key => this.Key;
 
-		ulong ISingleItemOperation.CasValue
-		{
-			get { return this.Cas; }
-		}
+		ulong ISingleItemOperation.CasValue => this.Cas;
 	}
 }
 

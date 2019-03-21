@@ -14,10 +14,7 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 			this.mode = mode;
 		}
 
-		ConcatenationMode IConcatOperation.Mode
-		{
-			get { return this.mode; }
-		}
+		ConcatenationMode IConcatOperation.Mode => this.mode;
 
 		protected internal override bool ReadResponseAsync(PooledSocket socket, System.Action<bool> next)
 		{

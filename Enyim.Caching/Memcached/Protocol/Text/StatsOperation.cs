@@ -66,10 +66,7 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 			return new TextOperationResult().Pass();
 		}
 
-		Dictionary<string, string> IStatsOperation.Result
-		{
-			get { return result; }
-		}
+		Dictionary<string, string> IStatsOperation.Result => result;
 
 		protected internal override bool ReadResponseAsync(PooledSocket socket, System.Action<bool> next)
 		{

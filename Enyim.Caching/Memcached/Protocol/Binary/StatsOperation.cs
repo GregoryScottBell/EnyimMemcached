@@ -53,10 +53,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			return result;
 		}
 
-		Dictionary<string, string> IStatsOperation.Result
-		{
-			get { return this.result; }
-		}
+		Dictionary<string, string> IStatsOperation.Result => this.result;
 	}
 }
 

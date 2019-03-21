@@ -30,10 +30,7 @@ namespace Enyim.Caching.Memcached.Protocol
 			return this.ReadResponseAsync(socket, next);
 		}
 
-		int IOperation.StatusCode
-		{
-			get { return this.StatusCode; }
-		}
+		int IOperation.StatusCode => this.StatusCode;
 
 		public int StatusCode { get; protected set; }
 	}

@@ -15,10 +15,7 @@ namespace Enyim.Caching.Configuration
 		/// Returns a collection of Memcached servers which can be used by the client.
 		/// </summary>
 		[ConfigurationProperty("servers", IsRequired = true)]
-		public EndPointElementCollection Servers
-		{
-			get { return (EndPointElementCollection)base["servers"]; }
-		}
+		public EndPointElementCollection Servers => (EndPointElementCollection)base["servers"];
 
 		/// <summary>
 		/// Gets or sets the configuration of the socket pool.
@@ -92,15 +89,9 @@ namespace Enyim.Caching.Configuration
 
 		#region [ IMemcachedClientConfiguration]
 
-		IList<IPEndPoint> IMemcachedClientConfiguration.Servers
-		{
-			get { return this.Servers.ToIPEndPointCollection(); }
-		}
+		IList<IPEndPoint> IMemcachedClientConfiguration.Servers => this.Servers.ToIPEndPointCollection();
 
-		ISocketPoolConfiguration IMemcachedClientConfiguration.SocketPool
-		{
-			get { return this.SocketPool; }
-		}
+		ISocketPoolConfiguration IMemcachedClientConfiguration.SocketPool => this.SocketPool;
 
 		IMemcachedKeyTransformer IMemcachedClientConfiguration.CreateKeyTransformer()
 		{
@@ -117,10 +108,7 @@ namespace Enyim.Caching.Configuration
 			return this.Transcoder.CreateInstance() ?? new DefaultTranscoder();
 		}
 
-		IAuthenticationConfiguration IMemcachedClientConfiguration.Authentication
-		{
-			get { return this.Authentication; }
-		}
+		IAuthenticationConfiguration IMemcachedClientConfiguration.Authentication => this.Authentication;
 
 		IServerPool IMemcachedClientConfiguration.CreatePool()
 		{

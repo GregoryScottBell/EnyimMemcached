@@ -4,7 +4,7 @@
 	{
 		public ulong Cas { get; set; }
 
-		public bool HasValue { get { return Value != null; } }
+		public bool HasValue => Value != null;
 
 		public object Value { get; set; }
 

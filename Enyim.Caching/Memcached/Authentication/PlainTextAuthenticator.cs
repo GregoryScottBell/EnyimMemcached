@@ -17,10 +17,7 @@ namespace Enyim.Caching.Memcached
 			this.authData = CreateAuthData(zone, userName, password);
 		}
 
-		string ISaslAuthenticationProvider.Type
-		{
-			get { return "PLAIN"; }
-		}
+		string ISaslAuthenticationProvider.Type => "PLAIN";
 
 		void ISaslAuthenticationProvider.Initialize(Dictionary<string, object> parameters)
 		{

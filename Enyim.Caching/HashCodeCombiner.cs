@@ -6,13 +6,11 @@ namespace Enyim
 	/// </summary>
 	public class HashCodeCombiner
 	{
-		private int currentHash;
-
 		public HashCodeCombiner() : this(0x1505) { }
 
 		public HashCodeCombiner(int initialValue)
 		{
-			this.currentHash = initialValue;
+			this.CurrentHash = initialValue;
 		}
 
 		public static int Combine(int code1, int code2)
@@ -22,15 +20,12 @@ namespace Enyim
 
 		public void Add(int value)
 		{
-			this.currentHash = HashCodeCombiner.Combine(this.currentHash, value);
+			this.CurrentHash = HashCodeCombiner.Combine(this.CurrentHash, value);
 		}
 
-		public int CurrentHash
-		{
-			get { return this.currentHash; }
-		}
+        public int CurrentHash { get; private set; }
 
-		public static int Combine(int code1, int code2, int code3)
+        public static int Combine(int code1, int code2, int code3)
 		{
 			return HashCodeCombiner.Combine(HashCodeCombiner.Combine(code1, code2), code3);
 		}

@@ -113,20 +113,11 @@ namespace Enyim.Caching.Configuration
 
 		#region [ interface                     ]
 
-		IList<System.Net.IPEndPoint> IMemcachedClientConfiguration.Servers
-		{
-			get { return this.Servers; }
-		}
+		IList<System.Net.IPEndPoint> IMemcachedClientConfiguration.Servers => this.Servers;
 
-		ISocketPoolConfiguration IMemcachedClientConfiguration.SocketPool
-		{
-			get { return this.SocketPool; }
-		}
+		ISocketPoolConfiguration IMemcachedClientConfiguration.SocketPool => this.SocketPool;
 
-		IAuthenticationConfiguration IMemcachedClientConfiguration.Authentication
-		{
-			get { return this.Authentication; }
-		}
+		IAuthenticationConfiguration IMemcachedClientConfiguration.Authentication => this.Authentication;
 
 		IMemcachedKeyTransformer IMemcachedClientConfiguration.CreateKeyTransformer()
 		{

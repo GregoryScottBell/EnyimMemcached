@@ -33,10 +33,7 @@ namespace Enyim.Caching.Configuration
 		/// <summary>
 		/// Gets the <see cref="T:IPEndPoint"/> representation of this instance.
 		/// </summary>
-		public System.Net.IPEndPoint EndPoint
-		{
-			get { return this.endpoint ?? (this.endpoint = ConfigurationHelper.ResolveToEndPoint(this.Address, this.Port)); }
-		}
+		public System.Net.IPEndPoint EndPoint => this.endpoint ?? (this.endpoint = ConfigurationHelper.ResolveToEndPoint(this.Address, this.Port));
 
 		#region [ T:IPAddressValidator         ]
 		private class IPAddressValidator : ConfigurationValidatorBase

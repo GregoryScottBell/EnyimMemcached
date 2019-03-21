@@ -39,10 +39,7 @@ namespace Enyim.Caching.Configuration
 			this.interfaceType = type;
 		}
 
-		public override ConfigurationValidatorBase ValidatorInstance
-		{
-			get { return new InterfaceValidator(this.interfaceType); }
-		}
+		public override ConfigurationValidatorBase ValidatorInstance => new InterfaceValidator(this.interfaceType);
 	}
 }
 

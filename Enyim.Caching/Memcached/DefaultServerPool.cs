@@ -181,10 +181,7 @@ namespace Enyim.Caching.Memcached
 			return node;
 		}
 
-		IOperationFactory IServerPool.OperationFactory
-		{
-			get { return this.factory; }
-		}
+		IOperationFactory IServerPool.OperationFactory => this.factory;
 
 		IEnumerable<IMemcachedNode> IServerPool.GetWorkingNodes()
 		{

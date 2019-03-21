@@ -20,7 +20,7 @@ namespace Enyim.Caching.Memcached
 			this.buffers = new InterlockedQueue<Segment>();
 		}
 
-		public int Available { get { return this.available; } }
+		public int Available => this.available;
 
 		public int Read(byte[] buffer, int offset, int count)
 		{

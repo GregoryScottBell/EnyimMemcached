@@ -86,30 +86,15 @@ namespace Enyim.Caching
 			}
 		}
 
-		bool ILog.IsDebugEnabled
-		{
-			get { return true; }
-		}
+		bool ILog.IsDebugEnabled => true;
 
-		bool ILog.IsInfoEnabled
-		{
-			get { return true; }
-		}
+		bool ILog.IsInfoEnabled => true;
 
-		bool ILog.IsWarnEnabled
-		{
-			get { return true; }
-		}
+		bool ILog.IsWarnEnabled => true;
 
-		bool ILog.IsErrorEnabled
-		{
-			get { return true; }
-		}
+		bool ILog.IsErrorEnabled => true;
 
-		bool ILog.IsFatalEnabled
-		{
-			get { return true; }
-		}
+		bool ILog.IsFatalEnabled => true;
 
 		void ILog.Debug(object message)
 		{

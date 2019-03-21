@@ -27,30 +27,15 @@ namespace Enyim.Caching
 
 			#region [ ILog                         ]
 
-			bool ILog.IsDebugEnabled
-			{
-				get { return false; }
-			}
+			bool ILog.IsDebugEnabled => false;
 
-			bool ILog.IsInfoEnabled
-			{
-				get { return false; }
-			}
+			bool ILog.IsInfoEnabled => false;
 
-			bool ILog.IsWarnEnabled
-			{
-				get { return false; }
-			}
+			bool ILog.IsWarnEnabled => false;
 
-			bool ILog.IsErrorEnabled
-			{
-				get { return false; }
-			}
+			bool ILog.IsErrorEnabled => false;
 
-			bool ILog.IsFatalEnabled
-			{
-				get { return false; }
-			}
+			bool ILog.IsFatalEnabled => false;
 
 			void ILog.Debug(object message) { }
 			void ILog.Debug(object message, Exception exception) { }

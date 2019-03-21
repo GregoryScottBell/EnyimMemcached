@@ -35,10 +35,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			return new BinaryOperationResult() { Success = true };
 		}
 
-		ConcatenationMode IConcatOperation.Mode
-		{
-			get { return this.mode; }
-		}
+		ConcatenationMode IConcatOperation.Mode => this.mode;
 	}
 }
 

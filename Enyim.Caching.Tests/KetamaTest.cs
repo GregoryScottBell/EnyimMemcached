@@ -3299,15 +3299,9 @@ namespace MemcachedTest
 
 		#region IMemcachedNode Members
 
-		IPEndPoint IMemcachedNode.EndPoint
-		{
-			get { return this.EndPoint; }
-		}
+		IPEndPoint IMemcachedNode.EndPoint => this.EndPoint;
 
-		bool IMemcachedNode.IsAlive
-		{
-			get { return true; }
-		}
+		bool IMemcachedNode.IsAlive => true;
 
 		bool IMemcachedNode.Ping()
 		{

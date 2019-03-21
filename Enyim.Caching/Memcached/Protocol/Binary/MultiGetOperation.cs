@@ -8,8 +8,6 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 	public class MultiGetOperation : BinaryMultiItemOperation, IMultiGetOperation
 	{
 		private static readonly Enyim.Caching.ILog log = Enyim.Caching.LogManager.GetLogger(typeof(MultiGetOperation));
-
-		private Dictionary<string, CacheItem> result;
 		private Dictionary<int, string> idToKey;
 		private int noopId;
 
@@ -73,7 +71,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 
 		protected internal override bool ReadResponseAsync(PooledSocket socket, Action<bool> next)
 		{
-			this.result = new Dictionary<string, CacheItem>();
+			this.Result = new Dictionary<string, CacheItem>();
 			this.Cas = new Dictionary<string, ulong>();
 
 			this.currentSocket = socket;
@@ -135,14 +133,14 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 				// deserialize the response
 				var flags = (ushort)BinaryConverter.DecodeInt32(reader.Extra, 0);
 
-				this.result[key] = new CacheItem(flags, reader.Data);
+				this.Result[key] = new CacheItem(flags, reader.Data);
 				this.Cas[key] = reader.CAS;
 			}
 		}
 
 		protected internal override IOperationResult ReadResponse(PooledSocket socket)
 		{
-			this.result = new Dictionary<string, CacheItem>();
+			this.Result = new Dictionary<string, CacheItem>();
 			this.Cas = new Dictionary<string, ulong>();
 			var result = new TextOperationResult();
 
@@ -169,7 +167,7 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 				// deserialize the response
 				int flags = BinaryConverter.DecodeInt32(response.Extra, 0);
 
-				this.result[key] = new CacheItem((ushort)flags, response.Data);
+				this.Result[key] = new CacheItem((ushort)flags, response.Data);
 				this.Cas[key] = response.CAS;
 			}
 
@@ -177,15 +175,9 @@ namespace Enyim.Caching.Memcached.Protocol.Binary
 			return result.Fail("Found response with CorrelationId {0}, but no key is matching it.");
 		}
 
-		public Dictionary<string, CacheItem> Result
-		{
-			get { return this.result; }
-		}
+        public Dictionary<string, CacheItem> Result { get; private set; }
 
-		Dictionary<string, CacheItem> IMultiGetOperation.Result
-		{
-			get { return this.result; }
-		}
+		Dictionary<string, CacheItem> IMultiGetOperation.Result => this.Result;
 	}
 }
 

@@ -5,10 +5,7 @@ namespace Enyim.Caching.Memcached.Protocol.Text
 		internal CasOperation(string key, CacheItem value, uint expires, ulong cas)
 			: base(StoreCommand.CheckAndSet, key, value, expires, cas) { }
 
-		StoreMode IStoreOperation.Mode
-		{
-			get { return StoreMode.Set; }
-		}
+		StoreMode IStoreOperation.Mode => StoreMode.Set;
 
 		protected internal override bool ReadResponseAsync(PooledSocket socket, System.Action<bool> next)
 		{
