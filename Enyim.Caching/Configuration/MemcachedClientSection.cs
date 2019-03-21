@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Net;
-using System.Web.Configuration;
 using Enyim.Caching.Memcached;
 using Enyim.Reflection;
 
@@ -84,19 +83,6 @@ namespace Enyim.Caching.Configuration
 		}
 
 		/// <summary>
-		/// Called after deserialization.
-		/// </summary>
-		protected override void PostDeserialize()
-		{
-			WebContext hostingContext = base.EvaluationContext.HostingContext as WebContext;
-
-			if (hostingContext != null && hostingContext.ApplicationLevel == WebApplicationLevel.BelowApplication)
-			{
-				throw new InvalidOperationException("The " + this.SectionInformation.SectionName + " section cannot be defined below the application level.");
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets the type of the communication between client and server.
 		/// </summary>
 		[ConfigurationProperty("protocol", IsRequired = false, DefaultValue = MemcachedProtocol.Binary)]
@@ -161,7 +147,7 @@ namespace Enyim.Caching.Configuration
 #region [ License information          ]
 /* ************************************************************
  * 
- *    Copyright (c) 2010 Attila Kiskó, enyim.com
+ *    Copyright (c) 2010 Attila KiskÃ³, enyim.com
  *    
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using System.Net;
-using System.Web.Script.Serialization;
 using System.Collections.ObjectModel;
 using System.Web;
 using Enyim.Caching.Configuration;
 using System.Configuration;
 using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace Enyim.Caching.Memcached
 {
@@ -34,7 +34,8 @@ namespace Enyim.Caching.Memcached
 			ConfigurationHelper.TryGetAndRemove(parameters, String.Empty, out json, true);
 			ConfigurationHelper.CheckForUnknownAttributes(parameters);
 
-			var tmp = new JavaScriptSerializer().Deserialize<int[][]>(json);
+			var tmp = (int[][]) new DataContractJsonSerializer(typeof(int[][]))
+				.ReadObject(new MemoryStream(new UTF8Encoding(false).GetBytes(json)));
 
 			this.buckets = tmp.Select(entry => new VBucket(entry[0], entry.Skip(1).ToArray())).ToArray();
 		}

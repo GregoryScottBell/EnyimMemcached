@@ -1,4 +1,4 @@
-﻿//#define DEBUG_IO
+//#define DEBUG_IO
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.IO;
-using System.ServiceModel.Channels;
 
 namespace Enyim.Caching.Memcached
 {
