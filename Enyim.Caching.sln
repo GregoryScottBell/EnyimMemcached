@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28714.193
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DemoApp\DemoApp.csproj", "{7225B6E0-A1FB-4F64-A5C5-1F640E21C90B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enyim.Caching.Log4NetAdapter", "Enyim.Caching.Log4NetAdapter\Enyim.Caching.Log4NetAdapter.csproj", "{9D3F12E6-6BDD-4DED-8B25-D877780640B4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enyim.Caching.NLogAdapter", "Enyim.Caching.NLogAdapter\Enyim.Caching.NLogAdapter.csproj", "{C96760B1-7CAD-4983-9FAD-EB00CD7A9FC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enyim.Caching.Tests", "Enyim.Caching.Tests\Enyim.Caching.Tests.csproj", "{5A048FA9-6025-4E06-B3CC-D6F2BEE7DA46}"
@@ -14,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enyim.Caching", "Enyim.Caching\Enyim.Caching.csproj", "{05C7DBAF-737A-4F24-86A2-01A9711FCA34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enyim.Caching.DefaultPerformanceMonitor", "Enyim.Caching.DefaultPerformanceMonitor\Enyim.Caching.DefaultPerformanceMonitor.csproj", "{19E00480-58CA-4F95-861C-47DC7F2F40F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enyim.Caching.Log4NetAdapter", "Enyim.Caching.Log4NetAdapter\Enyim.Caching.Log4NetAdapter.csproj", "{64429A10-A862-4D5E-B6ED-2581B9FA1AF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +24,6 @@ Global
 		{7225B6E0-A1FB-4F64-A5C5-1F640E21C90B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7225B6E0-A1FB-4F64-A5C5-1F640E21C90B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7225B6E0-A1FB-4F64-A5C5-1F640E21C90B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D3F12E6-6BDD-4DED-8B25-D877780640B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D3F12E6-6BDD-4DED-8B25-D877780640B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D3F12E6-6BDD-4DED-8B25-D877780640B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D3F12E6-6BDD-4DED-8B25-D877780640B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C96760B1-7CAD-4983-9FAD-EB00CD7A9FC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C96760B1-7CAD-4983-9FAD-EB00CD7A9FC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C96760B1-7CAD-4983-9FAD-EB00CD7A9FC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -44,6 +40,10 @@ Global
 		{19E00480-58CA-4F95-861C-47DC7F2F40F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19E00480-58CA-4F95-861C-47DC7F2F40F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19E00480-58CA-4F95-861C-47DC7F2F40F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64429A10-A862-4D5E-B6ED-2581B9FA1AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64429A10-A862-4D5E-B6ED-2581B9FA1AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64429A10-A862-4D5E-B6ED-2581B9FA1AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64429A10-A862-4D5E-B6ED-2581B9FA1AF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
